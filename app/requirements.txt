@@ -1,0 +1,6 @@
+requests
+setuptools
+uvicorn
+fastapi
+pydantic
+ujson

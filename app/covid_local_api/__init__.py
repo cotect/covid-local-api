@@ -1,0 +1,1 @@
+from covid_local_api.__version__ import __version__
