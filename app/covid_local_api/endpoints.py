@@ -10,13 +10,14 @@ from starlette.responses import Response, RedirectResponse
 from fastapi import Depends, FastAPI, Query, status
 
 from covid_local_api.__version__ import __version__
-from covid_local_api.schema import HotlineList
+from covid_local_api.db_handler import DatabaseHandler
+from covid_local_api.schema import HotlineList, Hotline
 from covid_local_api.utils import endpoint_utils
 
-# Initialize logger
+# Initialize
 log = logging.getLogger(__name__)
-
-# Get environment variables
+db = DatabaseHandler()
+geonames_username = os.environ['GEONAMES_USERNAME']
 
 # Initialize API
 app = FastAPI(
@@ -34,8 +35,9 @@ async def get_geonames(
     q: str = Query(..., description="Free-form query string."), 
     maxRows: int = Query(10, description="Maximum number of entries to return.")
 ):
+    # TODO: Check out if I need to do await here. 
     response = RedirectResponse(url=
-        f"http://api.geonames.org/searchJSON?q={q}&maxRows={maxRows}&username={os.environ['GEONAMES_USERNAME']}&featureClass=P&featureClass=A")
+        f"http://api.geonames.org/searchJSON?q={q}&maxRows={maxRows}&username={geonames_username}&featureClass=P&featureClass=A")
     return response
 
     # TODO: For now, this simply redirects to the geonames api, maybe parse the results instead and return only a subset.
@@ -43,13 +45,29 @@ async def get_geonames(
     #print(results)
     #return {"message": "not working yet"}
 
+
 @app.get(
     "/hotlines",
     summary="Get hotlines filtered by a specified region.",
     response_model=HotlineList
 )
-def get_hotlines(region_id: str = Query(..., description="Region ID to filter hotlines.")):
-    return None
+# TODO: Import search via text and zip code, optionally country as filter. 
+def get_hotlines(geonames_id: int = Query(..., description="Geonames ID to filter hotlines.")):
+
+    # TODO: This can more or less be copied for the other functions
+
+    # Find hierarchically higher areas (this contains the area itself!)
+    hierarchy = geocoder.geonames(geonames_id, key=geonames_username, method="hierarchy")
+    hierarchy = hierarchy[::-1]  # reverse, so that more local areas come first
+
+    # Get all geonames ids
+    geonames_ids = [item.geonames_id for item in hierarchy]
+
+    # Get all matching entries from the database
+    results = db.get('hotlines', geonames_ids)
+
+    return {"hotlines": results}
+
 
 
 # Use function names as operation IDs

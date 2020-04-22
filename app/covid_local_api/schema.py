@@ -9,11 +9,16 @@ from pydantic import BaseModel, Field
 
 
 class Hotline(BaseModel):
+    country: Optional[str] = None
+    region: Optional[str] = None
+    geonames_ids: Optional[int] = None
     name: Optional[str] = None
-    phone_number: Optional[str] = None
+    phone: Optional[str] = None
     email: Optional[str] = None
     website: Optional[str] = None
-    operation_hours: Optional[str] = None
+    description: Optional[str] = None
+    operating_hours: Optional[str] = None
+    sources: Optional[str] = None
 
 
 class HotlineList(BaseModel):
