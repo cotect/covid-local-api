@@ -14,7 +14,8 @@ class DatabaseHandler():
         urllib.request.urlretrieve(url, xlsx_filename)
 
         # Create in-memory sqlite3 database from excel file
-        self.con = sqlite3.connect(":memory:")
+        # We can use check_same_thread because we only read from the database, so there's no concurrency
+        self.con = sqlite3.connect(":memory:", check_same_thread=False)
         dfs = pd.read_excel(xlsx_filename, sheet_name=None)
         for table, df in dfs.items():
             df.to_sql(table, self.con)
