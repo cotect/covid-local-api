@@ -1,3 +1,6 @@
+# Credentials
+app/covid_local_api/credentials.py
+
 # IntelliJ
 target/
 .idea/
