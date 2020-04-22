@@ -29,7 +29,7 @@ class DatabaseHandler():
         self.con.row_factory = dict_factory
 
     def get(self, sheet, geonames_ids):
-        """Get all entries from sheet where the geoname id is in geonames_ids.
+        """Get all entries from `sheet` whose geonames_id is in `geonames_ids`.
         
         Args:
             sheet (str): The worksheet in the Google Sheet
@@ -38,7 +38,7 @@ class DatabaseHandler():
         Returns:
             (list of dict): Filtered database entries as key-value dicts
         """
-        cur = self.con.execute(f"SELECT * FROM {sheet} WHERE geonames_ids IN ({', '.join(map(str, geonames_ids))})")
+        cur = self.con.execute(f"SELECT * FROM {sheet} WHERE geonames_id IN ({', '.join(map(str, geonames_ids))})")
         dicts = cur.fetchall()
         return dicts
 
