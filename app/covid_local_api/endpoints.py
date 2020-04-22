@@ -12,7 +12,6 @@ from fastapi import Depends, FastAPI, Query, status
 from covid_local_api.__version__ import __version__
 from covid_local_api.schema import HotlineList
 from covid_local_api.utils import endpoint_utils
-from covid_local_api import credentials
 
 # Initialize logger
 log = logging.getLogger(__name__)
@@ -36,7 +35,7 @@ async def get_geonames(
     maxRows: int = Query(10, description="Maximum number of entries to return.")
 ):
     response = RedirectResponse(url=
-        f"http://api.geonames.org/searchJSON?q={q}&maxRows={maxRows}&username={credentials.geonames_username}&featureClass=P&featureClass=A")
+        f"http://api.geonames.org/searchJSON?q={q}&maxRows={maxRows}&username={os.environ['GEONAMES_USERNAME']}&featureClass=P&featureClass=A")
     return response
 
     # TODO: For now, this simply redirects to the geonames api, maybe parse the results instead and return only a subset.
