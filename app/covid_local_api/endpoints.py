@@ -28,10 +28,15 @@ app = FastAPI(
 
 
 def get_from_sheet(sheet, geonames_id):
-    # Find hierarchically higher areas (this contains the area itself!)
+    # Find all hierarchically higher areas (this contains the area itself!).
+    # This is important if geonames_id belongs e.g. to Berlin Mitte but there's a hotline for Berlin.
     hierarchy = geocoder.geonames(
         geonames_id, key=geonames_username, method="hierarchy")
     hierarchy = hierarchy[::-1]  # reverse, so that more local areas come first
+    
+    # TODO: Maybe also search for children here, e.g. if geonames_id belongs to Berlin but the 
+    #   health departments are in the districts. Not sure if it makes sense to search only for 
+    #   direct children or whether we would need all children (which would be a massive overload).
 
     # Get all geonames ids
     all_geonames_ids = [item.geonames_id for item in hierarchy]
