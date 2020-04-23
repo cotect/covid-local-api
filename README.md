@@ -39,7 +39,7 @@ For all endpoints, you indicate the location via query parameters (i.e. `?key=va
 
 - `?placename=<city, area, ...>`: Coming soon
 - `?postalcode=<number>`: Coming soon
-- `?geonames_id=<id>`: ID for a location on genoames.org. You can retrieve the ID manually by searching on geonames.org (the ID is the number in the blue box on the right hand side of the search result view), or by using [their API](http://www.geonames.org/export/web-services.html). To make things easier, we offer a wrapper around their [location search](http://www.geonames.org/export/geonames-search.html) at the `/geonames` endpoint (see above). 
+- `?geonames_id=<id>`: ID for a location on [geonames.org](geonames.org).org. You can retrieve the ID manually by searching on [geonames.org](geonames.org) (the ID is the number in the blue box on the right hand side of the search result view), or by using [their API](http://www.geonames.org/export/web-services.html). To make things easier, we offer a wrapper around their [location search](http://www.geonames.org/export/geonames-search.html) at the `/geonames` endpoint (see above). 
 
 
 ## Output
