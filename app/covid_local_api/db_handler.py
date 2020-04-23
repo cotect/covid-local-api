@@ -69,7 +69,6 @@ class DatabaseHandler():
         # TODO: Find a better solution to calculate distances, based on true distance in kilometers. 
         squared_distance = f"(lat-{lat})*(lat-{lat})+(lon-{lon})*(lon-{lon})"
         query = f"SELECT *, {squared_distance} AS distance FROM test_sites WHERE {squared_distance} <= {max_distance}*{max_distance} ORDER BY {squared_distance} LIMIT {max_count}"
-        print(query)
         cur = self.con.execute(query)
         
         dicts = cur.fetchall()

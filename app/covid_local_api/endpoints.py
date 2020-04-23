@@ -47,12 +47,14 @@ def get_from_sheet(sheet, geonames_id):
     response_model=ResultsList
 )
 # TODO: Import search via text and zip code, optionally country as filter.
-def get_all(geonames_id: int = Query(..., description="Geonames ID to filter.")):
+def get_all(geonames_id: int = Query(..., description="Geonames ID to filter."),
+            max_distance: float = Query(0.5, description="Maximum distance in degrees lon/lat for test sites"),
+            max_count: int = Query(5, description="Maximum number of test sites to return")):
     return {
-        "hotlines": get_from_sheet("hotlines", geonames_id),
-        "websites": get_from_sheet("websites", geonames_id),
-        "test_sites": get_from_sheet("test_sites", geonames_id),
-        "health_departments": get_from_sheet("health_departments", geonames_id)
+        "hotlines": get_hotlines(geonames_id)["hotlines"],
+        "websites": get_websites(geonames_id)["websites"],
+        "test_sites": get_test_sites(geonames_id, max_distance=max_distance, max_count=max_count)["test_sites"], 
+        "health_departments": get_health_departments(geonames_id)["health_departments"]
     }
 
 
@@ -83,8 +85,8 @@ def get_websites(geonames_id: int = Query(..., description="Geonames ID to filte
 )
 def get_test_sites(
     geonames_id: int = Query(..., description="Geonames ID to filter"), 
-    max_distance: float = Query(0.5, description="Maximum distance in degrees lon/lat"),
-    max_count: int = Query(5, description="Maximum number of items to return")):
+    max_distance: float = Query(0.5, description="Maximum distance in degrees lon/lat for test sites"),
+    max_count: int = Query(5, description="Maximum number of test sites to return")):
     
     # Get latitude/longitude for this geonames_id. 
     details = geocoder.geonames(
