@@ -103,7 +103,8 @@ def get_test_sites(
     summary=f"Get health departments filtered by a specified region.",
     response_model=ResultsList
 )
-# TODO: Import search via text and zip code, optionally country as filter.
+# TODO: This doesn't return results if e.g. Berlin is selected but the health department is in Berlin Mitte. 
+#   Maybe also search for the direct children of the geonames id (but is direct children enough)?
 def get_health_departments(geonames_id: int = Query(..., description="Geonames ID to filter.")):
     return {"health_departments": get_from_sheet("health_departments", geonames_id)}
 
