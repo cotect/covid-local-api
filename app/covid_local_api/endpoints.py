@@ -96,6 +96,7 @@ def get_health_departments(geonames_id: int = Query(..., description="Geonames I
     return {"health_departments": get_from_sheet("health_departments", geonames_id)}
 
 
+# TODO: Make this endpoint optional, i.e. if no geonames id is stored in env variables, return an error. 
 @app.get(
     "/geonames",
     summary="Get geoname ids via free-form query. This redirects to the geonames API (https://www.geonames.org/export/web-services.html) but returns only results of feature class A (country, state, region) and P (city, village)."
