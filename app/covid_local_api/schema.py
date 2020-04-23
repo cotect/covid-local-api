@@ -48,6 +48,7 @@ class TestSite(BaseModel):
     operating_hours: Optional[str] = None
     
     sources: Optional[str] = None
+    distance: Optional[float] = None
 
 
 class HealthDepartment(BaseModel):

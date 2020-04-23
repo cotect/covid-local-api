@@ -78,12 +78,22 @@ def get_websites(geonames_id: int = Query(..., description="Geonames ID to filte
 
 @app.get(
     "/test_sites",
-    summary=f"Get test sites filtered by a specified region.",
+    summary=f"Get nearby test sites (sorted by distance to place).",
     response_model=ResultsList
 )
-# TODO: Import search via text and zip code, optionally country as filter.
-def get_test_sites(geonames_id: int = Query(..., description="Geonames ID to filter.")):
-    return {"test_sites": get_from_sheet("test_sites", geonames_id)}
+def get_test_sites(
+    geonames_id: int = Query(..., description="Geonames ID to filter"), 
+    max_distance: float = Query(0.5, description="Maximum distance in degrees lon/lat"),
+    max_count: int = Query(5, description="Maximum number of items to return")):
+    
+    # Get latitude/longitude for this geonames_id. 
+    details = geocoder.geonames(
+        geonames_id, key=geonames_username, method="details")
+    lat = details.lat
+    lon = details.lng
+    
+    # Get nearby test sites.
+    return {"test_sites": db.get_nearby("test_sites", lat, lon, max_distance=max_distance, max_count=max_count)}
 
 
 @app.get(
