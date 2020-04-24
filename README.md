@@ -17,7 +17,6 @@ Now you can head over to your browser and type in:
 This will return all local information for Berlin Mitte as a JSON.
 
 
-
 ## Endpoints
 
 Five endpoints to get information:
