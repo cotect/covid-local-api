@@ -1,5 +1,7 @@
 # covid-local-api
 
+![](docs/images/github-banner.png)
+
 REST API for location-based information about COVID-19 / Coronavirus (hotlines, test sites, health departments, ...). 
 
 
