@@ -1,3 +1,5 @@
+app/covid_local_api/data/spreedsheet.xlsx
+
 # IntelliJ
 target/
 .idea/

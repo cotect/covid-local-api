@@ -11,7 +11,7 @@ class DatabaseHandler():
         # TODO: This should be done regularly or each time the Google Sheets database updates. 
         # Download data from Google Sheets as excel file
         url = "https://docs.google.com/spreadsheets/d/1AXadba5Si7WbJkfqQ4bN67cbP93oniR-J6uN0_Av958/export?format=xlsx"
-        xlsx_filename = "data/spreedsheat.xlsx"
+        xlsx_filename = "data/spreedsheet.xlsx"
         urllib.request.urlretrieve(url, xlsx_filename)
 
         # Create in-memory sqlite3 database from excel file
