@@ -302,7 +302,12 @@ def search_osm(query: str, limit: int = 5, country_codes: List[str] = None) -> s
         response = requests.get(request_url.format(query=query, limit=limit))
         results = []
         for place in response.json():
-            if "osm_type" in place and place["osm_type"] and "osm_id" in place and place["osm_id"]:
+            if (
+                "osm_type" in place
+                and place["osm_type"]
+                and "osm_id" in place
+                and place["osm_id"]
+            ):
                 name = place["display_name"]
                 results.append(
                     (

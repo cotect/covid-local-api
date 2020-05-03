@@ -12,7 +12,7 @@ from covid_local_api.utils.place_request_utils import (
     request_geonames_hierarchy,
     request_osm_hierarchy,
     search_geonames,
-    search_osm
+    search_osm,
 )
 
 
@@ -84,7 +84,7 @@ class PlaceHandler:
 
         if key in self._place_wikidata_mapping or key in self._place_inverse_mapping:
             return True
-    
+
     def search_places(self, query: str, limit: int = 5):
         search_result = []
         added_wikidata_ids = set()
@@ -94,7 +94,7 @@ class PlaceHandler:
             if wikidata_id and wikidata_id not in added_wikidata_ids:
                 search_result.append((wikidata_id, result[1]))
                 added_wikidata_ids.add(wikidata_id)
-        
+
         if len(search_result) < limit:
             osm_results = search_osm(query, limit, self._country_codes)
             for result in osm_results:
@@ -104,12 +104,12 @@ class PlaceHandler:
                     added_wikidata_ids.add(wikidata_id)
                 if len(search_result) == limit:
                     break
-        
+
         return search_result
 
     def resolve_hierarchies(self, key: str) -> list:
         key = key.strip().upper()
-        
+
         place_hierarchies = []
 
         if key in self._place_wikidata_mapping:

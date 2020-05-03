@@ -115,9 +115,7 @@ setup(
     url=URL,
     license="MIT",
     packages=find_packages(exclude=("tests",)),
-    package_data={
-        NAME: ['data/*'],
-    },
+    package_data={NAME: ["data/*"],},
     # If your package is a single module, use this instead of 'packages':
     # py_modules=['mypackage'],
     install_requires=requirements,

@@ -4,11 +4,10 @@ import urllib.request
 import math
 
 
-class DatabaseHandler():
-
+class DatabaseHandler:
     def __init__(self):
         """Download data from Google Sheets and store it as in-memory sqlite3 database"""
-        # TODO: This should be done regularly or each time the Google Sheets database updates. 
+        # TODO: This should be done regularly or each time the Google Sheets database updates.
         # Download data from Google Sheets as excel file
         url = "https://docs.google.com/spreadsheets/d/1AXadba5Si7WbJkfqQ4bN67cbP93oniR-J6uN0_Av958/export?format=xlsx"
         xlsx_filename = "data/spreedsheet.xlsx"
@@ -27,6 +26,7 @@ class DatabaseHandler():
             for idx, col in enumerate(cursor.description):
                 d[col[0]] = row[idx]
             return d
+
         self.con.row_factory = dict_factory
 
     def get(self, sheet, geonames_ids):
@@ -40,7 +40,9 @@ class DatabaseHandler():
             (list of dict): Filtered database entries as key-value dicts
         """
         # TODO: Maybe integrate hierarchy thing here directly, as I also handle distance calculations now in this class (see get_nearby).
-        cur = self.con.execute(f"SELECT * FROM {sheet} WHERE geonames_id IN ({', '.join(map(str, geonames_ids))})")
+        cur = self.con.execute(
+            f"SELECT * FROM {sheet} WHERE geonames_id IN ({', '.join(map(str, geonames_ids))})"
+        )
         dicts = cur.fetchall()
         return dicts
 
@@ -63,17 +65,16 @@ class DatabaseHandler():
         Returns:
             list of dict: Filtered database entries as key-value dicts
         """
-        # Query elements from the sheet that are closer to lat/lon than max_distance, 
+        # Query elements from the sheet that are closer to lat/lon than max_distance,
         # order them by the distance, and limit number of rows to max_count.
         # Distance is in degrees lat/lon, see comment in docstring.
-        # TODO: Find a better solution to calculate distances, based on true distance in kilometers. 
+        # TODO: Find a better solution to calculate distances, based on true distance in kilometers.
         squared_distance = f"(lat-{lat})*(lat-{lat})+(lon-{lon})*(lon-{lon})"
         query = f"SELECT *, {squared_distance} AS distance FROM test_sites WHERE {squared_distance} <= {max_distance}*{max_distance} ORDER BY {squared_distance} LIMIT {max_count}"
         cur = self.con.execute(query)
-        
+
         dicts = cur.fetchall()
         for d in dicts:
-            # Distance in SQL query is squared, so take the sqrt here. 
+            # Distance in SQL query is squared, so take the sqrt here.
             d["distance"] = math.sqrt(d["distance"])
         return dicts
-
