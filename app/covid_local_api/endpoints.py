@@ -6,6 +6,7 @@ import datetime
 import geocoder
 import uvicorn
 import requests
+import random
 from starlette.responses import Response, RedirectResponse
 from fastapi import Depends, FastAPI, Query, status
 
@@ -18,7 +19,7 @@ from covid_local_api.schema import (
     HealthDepartment,
     ResultsList,
 )
-from covid_local_api.utils import endpoint_utils
+from covid_local_api.utils import endpoint_utils, place_request_utils
 from covid_local_api.place_handler import (
     PlaceHandler,
     load_place_hierarchy,
@@ -36,6 +37,9 @@ place_handler = PlaceHandler(
     load_place_hierarchy(os.path.join(data_path, "DE_place-hierarchy.csv")),
     country_codes=["DE"],
 )
+
+# TODO: Temporary fix, see if we still need the user in this file after adapting the endpoints.
+geonames_username = random.choice(place_request_utils.GEONAMES_USERS)
 
 # Initialize API
 app = FastAPI(
@@ -59,6 +63,7 @@ def get_from_sheet(sheet, geonames_id):
 
     # Get all geonames ids
     all_geonames_ids = [item.geonames_id for item in hierarchy]
+    print(all_geonames_ids)
 
     # Get all matching entries from the database
     results = db.get(sheet, all_geonames_ids)
