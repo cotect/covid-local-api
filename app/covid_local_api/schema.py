@@ -9,64 +9,82 @@ from pydantic import BaseModel, Field
 
 
 class Hotline(BaseModel):
-    country: Optional[str] = None
-    region: Optional[str] = None
+    country_code: Optional[str] = None
+    place: Optional[str] = None
     geonames_id: Optional[int] = None
+    
     name: Optional[str] = None
+    operator: Optional[str] = None
     phone: Optional[str] = None
     email: Optional[str] = None
     website: Optional[str] = None
-    description: Optional[str] = None
     operating_hours: Optional[str] = None
+    category: Optional[str] = None
+    description: Optional[str] = None
     sources: Optional[str] = None
 
 
 class Website(BaseModel):
-    country: Optional[str] = None
-    region: Optional[str] = None
+    country_code: Optional[str] = None
+    place: Optional[str] = None
     geonames_id: Optional[int] = None
 
     name: Optional[str] = None
-    author: Optional[str] = None
+    operator: Optional[str] = None
     website: Optional[str] = None
+    category: Optional[str] = None
     description: Optional[str] = None
-
     sources: Optional[str] = None
 
 
 class TestSite(BaseModel):
-    country: Optional[str] = None
-    region: Optional[str] = None
+    country_code: Optional[str] = None
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+
+    name: Optional[str] = None
+    street: Optional[str] = None
+    zip_code: Optional[str] = None
+    city: Optional[str] = None
+    address_supplement: Optional[str] = None
+    phone: Optional[str] = None
+    operating_hours: Optional[str] = None
+    appointment_required: Optional[bool] = None
+    description: Optional[str] = None
+    sources: Optional[str] = None
+    
+    distance: Optional[float] = None  # added dynamically
+
+
+class HealthDepartment(BaseModel):
+    country_code: Optional[str] = None
+    place: Optional[str] = None
     geonames_id: Optional[int] = None
 
     name: Optional[str] = None
+    department: Optional[str] = None
     street: Optional[str] = None
     zip_code: Optional[int] = None
     city: Optional[str] = None
     address_supplement: Optional[str] = None
     phone: Optional[str] = None
-    operating_hours: Optional[str] = None
-
-    sources: Optional[str] = None
-    distance: Optional[float] = None
-
-
-class HealthDepartment(BaseModel):
-    country: Optional[str] = None
-    region: Optional[str] = None
-    geonames_id: Optional[int] = None
-
-    name: Optional[str] = None
-    code: Optional[str] = None
-    department: Optional[str] = None
-    street: Optional[str] = None
-    zip_code: Optional[int] = None
-    city: Optional[str] = None
-    phone: Optional[str] = None
     fax: Optional[str] = None
     email: Optional[str] = None
     website: Optional[str] = None
-
+    sources: Optional[str] = None
+    
+    
+class Restriction(BaseModel):
+    country_code: Optional[str] = None
+    place: Optional[str] = None
+    geonames_id: Optional[int] = None
+    
+    mask: Optional[str] = None
+    events_gatherings: Optional[str] = None
+    shops_gastronomy: Optional[str] = None
+    schools_kindergarden: Optional[str] = None
+    movement: Optional[str] = None
+    description: Optional[str] = None
     sources: Optional[str] = None
 
 
@@ -76,3 +94,4 @@ class ResultsList(BaseModel):
     websites: List[Website] = []
     test_sites: List[TestSite] = []
     health_departments: List[HealthDepartment] = []
+    restrictions: List[Restriction] = []
