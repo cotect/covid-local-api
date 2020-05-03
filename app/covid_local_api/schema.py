@@ -12,7 +12,7 @@ class Hotline(BaseModel):
     country_code: Optional[str] = None
     place: Optional[str] = None
     geonames_id: Optional[int] = None
-    
+
     name: Optional[str] = None
     operator: Optional[str] = None
     phone: Optional[str] = None
@@ -44,15 +44,16 @@ class TestSite(BaseModel):
 
     name: Optional[str] = None
     street: Optional[str] = None
-    zip_code: Optional[str] = None
+    zip_code: Optional[int] = None
     city: Optional[str] = None
     address_supplement: Optional[str] = None
     phone: Optional[str] = None
+    website: Optional[str] = None
     operating_hours: Optional[str] = None
     appointment_required: Optional[bool] = None
     description: Optional[str] = None
     sources: Optional[str] = None
-    
+
     distance: Optional[float] = None  # added dynamically
 
 
@@ -72,13 +73,13 @@ class HealthDepartment(BaseModel):
     email: Optional[str] = None
     website: Optional[str] = None
     sources: Optional[str] = None
-    
-    
+
+
 class Restriction(BaseModel):
     country_code: Optional[str] = None
     place: Optional[str] = None
     geonames_id: Optional[int] = None
-    
+
     mask: Optional[str] = None
     events_gatherings: Optional[str] = None
     shops_gastronomy: Optional[str] = None
