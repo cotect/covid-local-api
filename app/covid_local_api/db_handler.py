@@ -8,16 +8,14 @@ import os
 class DatabaseHandler:
     def __init__(self, data_path="data"):
         """Download data from Google Sheets and store it as in-memory sqlite3 database"""
-        # TODO: This should be done regularly or each time the Google Sheets database updates.
-        # Download data from Google Sheets as excel file
-        url = "https://docs.google.com/spreadsheets/d/1AXadba5Si7WbJkfqQ4bN67cbP93oniR-J6uN0_Av958/export?format=xlsx"
-        xlsx_filename = os.path.join(data_path, "spreedsheet.xlsx")
-        urllib.request.urlretrieve(url, xlsx_filename)
-
-        # Create in-memory sqlite3 database from excel file
+        # Create in-memory sqlite3 database.
         # We can use check_same_thread because we only read from the database, so there's no concurrency
         self.con = sqlite3.connect(":memory:", check_same_thread=False)
-        dfs = pd.read_excel(xlsx_filename, sheet_name=None)
+        
+        # TODO: This should be done regularly or each time the Google Sheets database updates.
+        # Download excel file from Google Sheets, read it with pandas and write to database.
+        url = "https://docs.google.com/spreadsheets/d/1AXadba5Si7WbJkfqQ4bN67cbP93oniR-J6uN0_Av958/export?format=xlsx"
+        dfs = pd.read_excel(url, sheet_name=None)
         for table, df in dfs.items():
             df.to_sql(table, self.con)
 
