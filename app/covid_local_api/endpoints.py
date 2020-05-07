@@ -26,11 +26,12 @@ from covid_local_api.place_handler import (
     load_place_mapping,
 )
 
-# Initialize
-log = logging.getLogger(__name__)
-db = DatabaseHandler()
 
 data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
+
+# Initialize
+log = logging.getLogger(__name__)
+db = DatabaseHandler(data_path)
 
 place_handler = PlaceHandler(
     load_place_mapping(os.path.join(data_path, "DE_placeid-to-wikidata.json")),

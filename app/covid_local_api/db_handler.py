@@ -2,15 +2,16 @@ import pandas as pd
 import sqlite3
 import urllib.request
 import math
+import os
 
 
 class DatabaseHandler:
-    def __init__(self):
+    def __init__(self, data_path="data"):
         """Download data from Google Sheets and store it as in-memory sqlite3 database"""
         # TODO: This should be done regularly or each time the Google Sheets database updates.
         # Download data from Google Sheets as excel file
         url = "https://docs.google.com/spreadsheets/d/1AXadba5Si7WbJkfqQ4bN67cbP93oniR-J6uN0_Av958/export?format=xlsx"
-        xlsx_filename = "data/spreedsheet.xlsx"
+        xlsx_filename = os.path.join(data_path, "spreedsheet.xlsx")
         urllib.request.urlretrieve(url, xlsx_filename)
 
         # Create in-memory sqlite3 database from excel file
