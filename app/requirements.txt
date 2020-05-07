@@ -7,3 +7,4 @@ ujson
 qwikidata
 geocoder
 pandas
+xlrd
