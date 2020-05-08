@@ -9,6 +9,10 @@ REST API for location-based information about COVID-19 / Coronavirus (hotlines, 
 
 Websites and apps can significantly help people in the Corona crisis – by tracing contacts, checking symptoms, or providing targeted information. However, actual help in case of an infection or other problems is often local: Cities have their own hotlines; test sites and health departments are distributed across the country; and restrictions vary from region to region. We want to bridge this gap between digital tools and local help by providing an API with local information (hotlines, websites, test sites, health departments, restrictions). Developers can integrate this information into their tools in order to show the user specific help offers based on his location. 
 
+Check out our [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to get an idea of which data our API offers!
+
+![](docs/images/dashboard.png)
+
 
 ## Live version
 
@@ -16,9 +20,7 @@ The API is now live! For a demo, head over to: [http://ec2-3-90-67-33.compute-1.
 
 This will return all local information for Berlin Mitte as a JSON. (Note that the server URL will change regularly at this stage).
 
-We also built a small [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to search through our data. 
-
-![](docs/images/dashboard.png)
+You can also use the [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to search through all the information we have. 
 
 
 ## Endpoints
@@ -71,7 +73,9 @@ The API should now be accessible at 127.0.0.1:8000. You can also deploy the API 
 
 ## Data
 
-The data for this project is stored in a Google Sheet [here](https://docs.google.com/spreadsheets/d/1AXadba5Si7WbJkfqQ4bN67cbP93oniR-J6uN0_Av958/edit?usp=sharing) (note that there is one worksheet for each data type). If you think that any of the data is wrong, please add a comment directly to the document or write to johannes.rieke@gmail.com. You can also use our [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to search through the data. 
+Help us collect new data with our Google Form: [https://forms.gle/PKU3oNmUJtwQbdbE9](https://forms.gle/PKU3oNmUJtwQbdbE9)
+
+The data for this project is stored in a [Google Sheet](https://docs.google.com/spreadsheets/d/1AXadba5Si7WbJkfqQ4bN67cbP93oniR-J6uN0_Av958/edit?usp=sharing) (note that there is one worksheet for each data type). If you think that any of the data is wrong, please add a comment directly to the document or write to johannes.rieke@gmail.com. You can also use our [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to search through the data. 
 
 
 ## Requirements
