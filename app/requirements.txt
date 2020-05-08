@@ -8,3 +8,4 @@ qwikidata
 geocoder
 pandas
 xlrd
+streamlit
