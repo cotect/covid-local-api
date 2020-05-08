@@ -23,12 +23,12 @@ We also built a small [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:
 
 ## Local deployment 
 
-To run the API locally, clone this repo and run the following command to start the API server locally:
+To run the API locally, clone this repo and run the following command:
 
     cd ./covid-local-api/app/covid_local_api
     uvicorn local_test:app --reload
 
-The API should now be accessible at 127.0.0.1:8000.
+The API should now be accessible at 127.0.0.1:8000. You can also deploy the API with docker, using the dockerfile in the repo. 
 
 
 ## Endpoints
