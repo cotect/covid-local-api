@@ -73,7 +73,7 @@ The API should now be accessible at 127.0.0.1:8000. You can also deploy the API 
 
 ## Data
 
-Help us collect new data with our Google Form: [https://forms.gle/PKU3oNmUJtwQbdbE9](https://forms.gle/PKU3oNmUJtwQbdbE9)
+Help us collect new data with our Google Form: [https://bit.ly/covid-local-form](https://bit.ly/covid-local-form)
 
 The data for this project is stored in a [Google Sheet](https://docs.google.com/spreadsheets/d/1AXadba5Si7WbJkfqQ4bN67cbP93oniR-J6uN0_Av958/edit?usp=sharing) (note that there is one worksheet for each data type). If you think that any of the data is wrong, please add a comment directly to the document or write to johannes.rieke@gmail.com. You can also use our [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to search through the data. 
 
