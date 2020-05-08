@@ -21,16 +21,6 @@ We also built a small [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:
 ![](docs/images/dashboard.png)
 
 
-## Local deployment 
-
-To run the API locally, clone this repo and run the following command:
-
-    cd ./covid-local-api/app/covid_local_api
-    uvicorn local_test:app --reload
-
-The API should now be accessible at 127.0.0.1:8000. You can also deploy the API with docker, using the dockerfile in the repo. 
-
-
 ## Endpoints
 
 Five endpoints to get information:
@@ -69,9 +59,19 @@ All endpoints return a JSON in the format:
 If you use the `/all` endpoint, all fields will be populated. If you use one of the more specific enpoints, the other fields will be empty. 
 
 
+## Local deployment 
+
+To run the API locally, clone this repo and run the following command:
+
+    cd ./covid-local-api/app/covid_local_api
+    uvicorn local_test:app --reload
+
+The API should now be accessible at 127.0.0.1:8000. You can also deploy the API with docker, using the dockerfile in the repo. 
+
+
 ## Data
 
-The data for this project is stored in a Google Sheet [here](https://docs.google.com/spreadsheets/d/1AXadba5Si7WbJkfqQ4bN67cbP93oniR-J6uN0_Av958/edit?usp=sharing) (note that there is one worksheet for each data type). If you think that any of the data is wrong, please add a comment directly to the document or write to johannes.rieke@gmail.com. 
+The data for this project is stored in a Google Sheet [here](https://docs.google.com/spreadsheets/d/1AXadba5Si7WbJkfqQ4bN67cbP93oniR-J6uN0_Av958/edit?usp=sharing) (note that there is one worksheet for each data type). If you think that any of the data is wrong, please add a comment directly to the document or write to johannes.rieke@gmail.com. You can also use our [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to search through the data. 
 
 
 ## Requirements
