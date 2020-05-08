@@ -16,7 +16,7 @@ The API is now live! For a demo, head over to: [http://ec2-3-90-67-33.compute-1.
 
 This will return all local information for Berlin Mitte as a JSON. (Note that the server URL will change regularly at this stage).
 
-We also built a small [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com) to search through our data. 
+We also built a small [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to search through our data. 
 
 
 ## Local deployment 
