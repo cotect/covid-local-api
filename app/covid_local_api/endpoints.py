@@ -71,10 +71,17 @@ def get_from_sheet(sheet, geonames_id):
     return results
 
 
-@app.get("/test")
+@app.get("/test_place_handler")
 # TODO: Import search via text and zip code, optionally country as filter.
 def test_place_handler(place_id: str = Query(..., description="Place ID to filter.")):
     return place_handler.resolve_hierarchies(place_id)
+
+
+@app.get("/test")
+def test():
+    """Show all results for Berlin Mitte."""
+    response = RedirectResponse(url="/all?geonames_id=6545310")
+    return response
 
 
 @app.get("/places", summary="Search for places via free-form query.")
