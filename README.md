@@ -5,18 +5,28 @@
 REST API for location-based information about COVID-19 / Coronavirus (hotlines, test sites, health departments, ...). 
 
 
-## Quickstart
+## What is this good for?
 
-Clone this repo and run the following command to start the API server locally:
+Websites and apps can significantly help people in the Corona crisis – by tracing contacts, checking symptoms, or providing targeted information. However, actual help in case of an infection or other problems is often local: Cities have their own hotlines; test sites and health departments are distributed across the country; and restrictions vary from region to region. We want to bridge this gap between digital tools and local help by providing an API with  information based on the user's location (hotlines, websites, test sites, health departments, restrictions). Developers can integrate this information into their tools in order to show people the best offers for local help.
+
+
+## Live version
+
+The API is now live! For a demo, head over to: [http://ec2-3-90-67-33.compute-1.amazonaws.com/all?geonames_id=6545310](http://ec2-3-90-67-33.compute-1.amazonaws.com/all?geonames_id=6545310)
+
+This will return all local information for Berlin Mitte as a JSON. (Note that the server URL will change regularly at this stage).
+
+We also built a small [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com) to search through our data. 
+
+
+## Local deployment 
+
+To run the API locally, clone this repo and run the following command to start the API server locally:
 
     cd ./covid-local-api/app/covid_local_api
     uvicorn local_test:app --reload
 
-Now you can head over to your browser and type in:
-
-    127.0.0.1:8000/all?geonames_id=6545310
-
-This will return all local information for Berlin Mitte as a JSON.
+The API should now be accessible at 127.0.0.1:8000.
 
 
 ## Endpoints
