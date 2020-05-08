@@ -7,7 +7,7 @@ REST API for location-based information about COVID-19 / Coronavirus (hotlines, 
 
 ## What is this good for?
 
-Websites and apps can significantly help people in the Corona crisis – by tracing contacts, checking symptoms, or providing targeted information. However, actual help in case of an infection or other problems is often local: Cities have their own hotlines; test sites and health departments are distributed across the country; and restrictions vary from region to region. We want to bridge this gap between digital tools and local help by providing an API with  information based on the user's location (hotlines, websites, test sites, health departments, restrictions). Developers can integrate this information into their tools in order to show people the best offers for local help.
+Websites and apps can significantly help people in the Corona crisis – by tracing contacts, checking symptoms, or providing targeted information. However, actual help in case of an infection or other problems is often local: Cities have their own hotlines; test sites and health departments are distributed across the country; and restrictions vary from region to region. We want to bridge this gap between digital tools and local help by providing an API with local information (hotlines, websites, test sites, health departments, restrictions). Developers can integrate this information into their tools in order to show the user specific help offers based on his location. 
 
 
 ## Live version
