@@ -18,6 +18,8 @@ This will return all local information for Berlin Mitte as a JSON. (Note that th
 
 We also built a small [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to search through our data. 
 
+![](docs/images/dashboard.png)
+
 
 ## Local deployment 
 
