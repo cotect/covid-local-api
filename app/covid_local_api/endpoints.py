@@ -27,19 +27,19 @@ from covid_local_api.place_handler import (
 )
 
 
+# Initialize helper objects
 data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
-
-# Initialize
 log = logging.getLogger(__name__)
 db = DatabaseHandler(data_path)
 
-place_handler = PlaceHandler(
-    load_place_mapping(os.path.join(data_path, "DE_placeid-to-wikidata.json")),
-    load_place_hierarchy(os.path.join(data_path, "DE_place-hierarchy.csv")),
-    country_codes=["DE"],
-)
+# TODO: Remove this for now. 
+# place_handler = PlaceHandler(
+#     load_place_mapping(os.path.join(data_path, "DE_placeid-to-wikidata.json")),
+#     load_place_hierarchy(os.path.join(data_path, "DE_place-hierarchy.csv")),
+#     country_codes=["DE"],
+# )
 
-# TODO: Temporary fix, see if we still need the user in this file after adapting the endpoints.
+# TODO: Change this to another way. 
 geonames_username = random.choice(place_request_utils.GEONAMES_USERS)
 
 # Initialize API
@@ -70,11 +70,10 @@ def get_from_sheet(sheet, geonames_id):
     results = db.get(sheet, all_geonames_ids)
     return results
 
-
-@app.get("/test_place_handler")
-# TODO: Import search via text and zip code, optionally country as filter.
-def test_place_handler(place_id: str = Query(..., description="Place ID to filter.")):
-    return place_handler.resolve_hierarchies(place_id)
+# TODO: Remove this for now
+# @app.get("/test_place_handler")
+# def test_place_handler(place_id: str = Query(..., description="Place ID to filter.")):
+#     return place_handler.resolve_hierarchies(place_id)
 
 
 @app.get("/test")
@@ -86,10 +85,11 @@ def test():
 
 @app.get("/places", summary="Search for places via free-form query.")
 def search_places(
-    query: str = Query(..., description="Free-form query string."),
+    q: str = Query(..., description="Free-form query string."),
     limit: int = Query(5, description="Maximum number of entries to return."),
 ):
-    return place_handler.search_places(query)
+    # TODO: Use geonames search here.
+    raise NotImplementedError
 
 
 @app.get(
