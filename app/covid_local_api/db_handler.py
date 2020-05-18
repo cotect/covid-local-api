@@ -7,7 +7,11 @@ import os
 
 class DatabaseHandler:
     def __init__(self, data_path="data"):
-        """Download data from Google Sheets and store it as in-memory sqlite3 database"""
+        """Downloads the Google Sheet and stores its data as in-memory sqlite3 database.
+
+        Args:
+            data_path (str, optional): The directory where the downloaded data should be stored. Defaults to "data".
+        """
         # Create in-memory sqlite3 database.
         # We can use check_same_thread because we only read from the database, so there's no concurrency
         self.con = sqlite3.connect(":memory:", check_same_thread=False)
