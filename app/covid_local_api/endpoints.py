@@ -92,18 +92,21 @@ def test():
     response_model=List[Place],
 )
 def search_places(
-    q: str = Query(..., description="Free-form query string (e.g. a city, neighborhood, state, ...)"),
+    q: str = Query(
+        ...,
+        description="Free-form query string (e.g. a city, neighborhood, state, ...)",
+    ),
     limit: int = Query(5, description="Maximum number of entries to return"),
     search_provider: str = Query(
         "geonames", description="The search provider (only geonames supported so far)",
     ),
 ):
-    # Search geonames API. 
+    # Search geonames API.
     search_results = geocoder.geonames(
         q, key=geonames_username, maxRows=limit, featureClass=["A", "P"]
     )
-    
-    # Format the search results and return them. 
+
+    # Format the search results and return them.
     places = []
     for result in search_results:
         place = Place(
@@ -201,27 +204,6 @@ def get_health_departments(
     geonames_id: int = Query(..., description="Geonames ID to filter.")
 ):
     return {"health_departments": get_from_sheet("health_departments", geonames_id)}
-
-
-# TODO: Make this endpoint optional, i.e. if no geonames id is stored in env variables, return an error.
-@app.get(
-    "/geonames",
-    summary="Get geoname ids via free-form query. This redirects to the geonames API (https://www.geonames.org/export/web-services.html) but returns only results of feature class A (country, state, region) and P (city, village).",
-)
-async def get_geonames(
-    q: str = Query(..., description="Free-form query string."),
-    maxRows: int = Query(10, description="Maximum number of entries to return."),
-):
-    # TODO: Check out if I need to do await here.
-    response = RedirectResponse(
-        url=f"http://api.geonames.org/searchJSON?q={q}&maxRows={maxRows}&username={geonames_username}&featureClass=P&featureClass=A"
-    )
-    return response
-
-    # TODO: For now, this simply redirects to the geonames api, maybe parse the results instead and return only a subset.
-    # results = geocoder.geonames(region_query, key=credentials.geonames_username, maxRows=10, featureClass=['A', 'P'])
-    # print(results)
-    # return {"message": "not working yet"}
 
 
 # Use function names as operation IDs
