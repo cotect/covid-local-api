@@ -9,6 +9,7 @@ import requests
 import random
 from starlette.responses import Response, RedirectResponse
 from fastapi import Depends, FastAPI, Query, status
+from typing import List
 
 from covid_local_api.__version__ import __version__
 from covid_local_api.db_handler import DatabaseHandler
@@ -18,6 +19,7 @@ from covid_local_api.schema import (
     TestSite,
     HealthDepartment,
     ResultsList,
+    Place,
 )
 from covid_local_api.utils import endpoint_utils, place_request_utils
 from covid_local_api.place_handler import (
@@ -32,14 +34,14 @@ data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
 log = logging.getLogger(__name__)
 db = DatabaseHandler(data_path)
 
-# TODO: Remove this for now. 
+# TODO: Remove this for now.
 # place_handler = PlaceHandler(
 #     load_place_mapping(os.path.join(data_path, "DE_placeid-to-wikidata.json")),
 #     load_place_hierarchy(os.path.join(data_path, "DE_place-hierarchy.csv")),
 #     country_codes=["DE"],
 # )
 
-# TODO: Change this to another way. 
+# TODO: Change this to another way.
 geonames_username = random.choice(place_request_utils.GEONAMES_USERS)
 
 # Initialize API
@@ -70,6 +72,7 @@ def get_from_sheet(sheet, geonames_id):
     results = db.get(sheet, all_geonames_ids)
     return results
 
+
 # TODO: Remove this for now
 # @app.get("/test_place_handler")
 # def test_place_handler(place_id: str = Query(..., description="Place ID to filter.")):
@@ -83,13 +86,39 @@ def test():
     return response
 
 
-@app.get("/places", summary="Search for places via free-form query.")
+@app.get(
+    "/places",
+    summary="Search for places via free-form query",
+    response_model=List[Place],
+)
 def search_places(
-    q: str = Query(..., description="Free-form query string."),
-    limit: int = Query(5, description="Maximum number of entries to return."),
+    q: str = Query(..., description="Free-form query string (e.g. a city, neighborhood, state, ...)"),
+    limit: int = Query(5, description="Maximum number of entries to return"),
+    search_provider: str = Query(
+        "geonames", description="The search provider (only geonames supported so far)",
+    ),
 ):
-    # TODO: Use geonames search here.
-    raise NotImplementedError
+    # Search geonames API. 
+    search_results = geocoder.geonames(
+        q, key=geonames_username, maxRows=limit, featureClass=["A", "P"]
+    )
+    
+    # Format the search results and return them. 
+    places = []
+    for result in search_results:
+        place = Place(
+            name=result.address,
+            country=result.country,
+            country_code=result.country_code,
+            state=result.state,
+            description=result.description + " - " + result.class_description,
+            geonames_id=result.geonames_id,
+            lat=result.lat,
+            lon=result.lng,
+            search_provider="geonames",
+        )
+        places.append(place)
+    return places
 
 
 @app.get(

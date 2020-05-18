@@ -7,6 +7,17 @@ from pydantic import BaseModel, Field
 # Field validation
 # https://pydantic-docs.helpmanual.io/usage/schema/#field-customisation
 
+class Place(BaseModel):
+    name: str
+    search_provider: str
+    geonames_id: int
+    country: Optional[str] = None
+    country_code: Optional[str] = None
+    state: Optional[str] = None
+    description: Optional[str] = None
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+
 
 class Hotline(BaseModel):
     country_code: Optional[str] = None
