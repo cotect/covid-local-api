@@ -1,12 +1,6 @@
 import pandas as pd
 import sqlite3
-import urllib.request
 import math
-import os
-import random
-import geocoder
-
-from utils import place_request_utils
 
 
 class DatabaseHandler:

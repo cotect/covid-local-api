@@ -1,5 +1,6 @@
 import logging
-import csv, json
+import csv
+import json
 from typing import List, Optional
 
 from covid_local_api.utils.place_request_utils import (

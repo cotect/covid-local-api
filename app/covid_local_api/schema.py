@@ -1,8 +1,5 @@
-from datetime import date
-from enum import Enum
 from typing import List, Optional
-
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 # Field validation
 # https://pydantic-docs.helpmanual.io/usage/schema/#field-customisation
@@ -87,7 +84,6 @@ class HealthDepartment(BaseModel):
     sources: Optional[str] = None
 
 
-# TODO: Maybe revert this to individual lists to make it a bit less ambiguous for the user.
 class ResultsList(BaseModel):
     hotlines: List[Hotline] = []
     websites: List[Website] = []

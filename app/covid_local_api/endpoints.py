@@ -1,32 +1,24 @@
 import logging
-import os
-import sys
-import time
-import datetime
 import geocoder
 import uvicorn
-import requests
-import random
-from starlette.responses import Response, RedirectResponse
-from fastapi import Depends, FastAPI, Query, status
+import os
+from starlette.responses import RedirectResponse
+from fastapi import FastAPI, Query
 from typing import List
 
 from covid_local_api.__version__ import __version__
 from covid_local_api.db_handler import DatabaseHandler
 from covid_local_api.schema import (
-    Hotline,
-    Website,
-    TestSite,
-    HealthDepartment,
     ResultsList,
     Place,
 )
 from covid_local_api.utils import endpoint_utils, place_request_utils
-from covid_local_api.place_handler import (
-    PlaceHandler,
-    load_place_hierarchy,
-    load_place_mapping,
-)
+
+# from covid_local_api.place_handler import (
+#     PlaceHandler,
+#     load_place_hierarchy,
+#     load_place_mapping,
+# )
 
 
 # Initialize helper objects
@@ -45,7 +37,8 @@ db = DatabaseHandler(data_path)
 # Initialize API
 app = FastAPI(
     title="COVID-19 Local API",
-    description="API to get local help information about COVID-19 (hotlines, websites, testing sites, ...)",
+    description="API to get local help information about COVID-19 (hotlines, websites, "
+    "testing sites, ...)",
     version=__version__,
 )
 
@@ -223,8 +216,9 @@ def get_test_sites(
     summary=f"Get responsible health departments for a place",
     response_model=ResultsList,
 )
-# TODO: This doesn't return results if e.g. Berlin is selected but the health department is in Berlin Mitte.
-#   Maybe also search for the direct children of the geonames id (but is direct children enough)?
+# TODO: This doesn't return results if e.g. Berlin is selected but the health department
+#   is in Berlin Mitte. Maybe also search for the direct children of the geonames id
+#   (but is direct children enough)?
 def get_health_departments(
     place_name: str = place_name_query, geonames_id: int = geonames_id_query,
 ):
