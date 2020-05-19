@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 # Field validation
 # https://pydantic-docs.helpmanual.io/usage/schema/#field-customisation
 
+
 class Place(BaseModel):
     name: str
     search_provider: str
@@ -86,24 +87,9 @@ class HealthDepartment(BaseModel):
     sources: Optional[str] = None
 
 
-class Restriction(BaseModel):
-    country_code: Optional[str] = None
-    place: Optional[str] = None
-    geonames_id: Optional[int] = None
-
-    mask: Optional[str] = None
-    events_gatherings: Optional[str] = None
-    shops_gastronomy: Optional[str] = None
-    schools_kindergarden: Optional[str] = None
-    movement: Optional[str] = None
-    description: Optional[str] = None
-    sources: Optional[str] = None
-
-
 # TODO: Maybe revert this to individual lists to make it a bit less ambiguous for the user.
 class ResultsList(BaseModel):
     hotlines: List[Hotline] = []
     websites: List[Website] = []
     test_sites: List[TestSite] = []
     health_departments: List[HealthDepartment] = []
-    restrictions: List[Restriction] = []
