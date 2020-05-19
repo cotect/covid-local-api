@@ -127,75 +127,100 @@ def search_places(
         raise ValueError("Search provider not supported:", search_provider)
 
 
+def parse_place_parameters(place_name, geonames_id):
+    """Returns the correct geonames id for the given query parameters. 
+    
+    If geonames_id is given, simply return it. If place_name is given, search the 
+    /places endpoint and return the geonames id of the first search result. If none of 
+    both is given, raise an error.
+    """
+    print(place_name, geonames_id)
+    if geonames_id is None and place_name is None:
+        raise ValueError("Either place_name or geonames_id must be provided")
+    elif geonames_id is None:
+        # Search by place_name and use first search result.
+        places = search_places(q=place_name, limit=1, search_provider="geonames")
+        return places[0].geonames_id
+        # TODO: Raise error if search returned no results.
+    else:
+        return geonames_id
+
+
+place_name_query = Query(
+    None,
+    description="The name of the place, e.g. a city, neighborhood, state (either "
+    "place_name or geonames_id must be provided)",
+)
+
+geonames_id_query = Query(
+    None,
+    description="The geonames.org id of the place (either place_name or "
+    "geonames_id must be provided)",
+)
+
+
 @app.get(
     "/all", summary="Get all items for a place", response_model=ResultsList,
 )
 # TODO: Import search via text and zip code, optionally country as filter.
 def get_all(
-    place_name: str = Query(
-        None,
-        description="The name of the place (either place_name or geonames_id has to be provided)",
-    ),
-    geonames_id: int = Query(
-        None,
-        description="The geonames id of the place (either place_name or geonames_id has to be provided)",
-    ),
+    place_name: str = place_name_query,
+    geonames_id: int = geonames_id_query,
     max_distance: float = Query(
         0.5, description="Maximum distance in degrees lon/lat for test sites"
     ),
     max_count: int = Query(5, description="Maximum number of test sites to return"),
 ):
-    if geonames_id is None and place_name is None:
-        raise ValueError("Either place_name or geonames_id must be provided")
-    elif geonames_id is None:
-        # TODO: Raise error if search returned no results.
-        # Search by place_name and use first search result.
-        geonames_id = search_places(q=place_name, limit=1, search_provider="geonames")[
-            0
-        ].geonames_id
-
+    geonames_id = parse_place_parameters(place_name, geonames_id)
+    print(geonames_id)
     return {
-        "hotlines": get_hotlines(geonames_id)["hotlines"],
-        "websites": get_websites(geonames_id)["websites"],
+        "hotlines": get_hotlines(geonames_id=geonames_id)["hotlines"],
+        "websites": get_websites(geonames_id=geonames_id)["websites"],
         "test_sites": get_test_sites(
-            geonames_id, max_distance=max_distance, max_count=max_count
+            geonames_id=geonames_id, max_distance=max_distance, max_count=max_count
         )["test_sites"],
-        "health_departments": get_health_departments(geonames_id)["health_departments"],
+        "health_departments": get_health_departments(geonames_id=geonames_id)[
+            "health_departments"
+        ],
     }
 
 
 @app.get(
-    "/hotlines",
-    summary=f"Get hotlines filtered by a specified region.",
-    response_model=ResultsList,
+    "/hotlines", summary=f"Get hotlines for a place", response_model=ResultsList,
 )
 # TODO: Import search via text and zip code, optionally country as filter.
-def get_hotlines(geonames_id: int = Query(..., description="Geonames ID to filter.")):
+def get_hotlines(
+    place_name: str = place_name_query, geonames_id: int = geonames_id_query,
+):
+    geonames_id = parse_place_parameters(place_name, geonames_id)
     return {"hotlines": get_from_sheet("hotlines", geonames_id)}
 
 
 @app.get(
-    "/websites",
-    summary=f"Get websites filtered by a specified region.",
-    response_model=ResultsList,
+    "/websites", summary=f"Get websites for a place", response_model=ResultsList,
 )
 # TODO: Import search via text and zip code, optionally country as filter.
-def get_websites(geonames_id: int = Query(..., description="Geonames ID to filter.")):
+def get_websites(
+    place_name: str = place_name_query, geonames_id: int = geonames_id_query,
+):
+    geonames_id = parse_place_parameters(place_name, geonames_id)
     return {"websites": get_from_sheet("websites", geonames_id)}
 
 
 @app.get(
     "/test_sites",
-    summary=f"Get nearby test sites (sorted by distance to place).",
+    summary=f"Get nearby test sites for a place (sorted by distance to place)",
     response_model=ResultsList,
 )
 def get_test_sites(
-    geonames_id: int = Query(..., description="Geonames ID to filter"),
+    place_name: str = place_name_query,
+    geonames_id: int = geonames_id_query,
     max_distance: float = Query(
         0.5, description="Maximum distance in degrees lon/lat for test sites"
     ),
     max_count: int = Query(5, description="Maximum number of test sites to return"),
 ):
+    geonames_id = parse_place_parameters(place_name, geonames_id)
 
     # Get latitude/longitude for this geonames_id.
     details = geocoder.geonames(geonames_id, key=geonames_username, method="details")
@@ -212,14 +237,15 @@ def get_test_sites(
 
 @app.get(
     "/health_departments",
-    summary=f"Get health departments filtered by a specified region.",
+    summary=f"Get responsible health departments for a place",
     response_model=ResultsList,
 )
 # TODO: This doesn't return results if e.g. Berlin is selected but the health department is in Berlin Mitte.
 #   Maybe also search for the direct children of the geonames id (but is direct children enough)?
 def get_health_departments(
-    geonames_id: int = Query(..., description="Geonames ID to filter.")
+    place_name: str = place_name_query, geonames_id: int = geonames_id_query,
 ):
+    geonames_id = parse_place_parameters(place_name, geonames_id)
     return {"health_departments": get_from_sheet("health_departments", geonames_id)}
 
 
