@@ -15,39 +15,51 @@ from covid_local_api.schema import (
 )
 from covid_local_api.utils import endpoint_utils, place_request_utils
 
+
+# TODO: Implement place handler code at some point in the future like below.
 # from covid_local_api.place_handler import (
 #     PlaceHandler,
 #     load_place_hierarchy,
 #     load_place_mapping,
 # )
-
-
-# Initialize helper objects
-data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
-log = logging.getLogger(__name__)
-db = DatabaseHandler(data_path)
-
-# TODO: Implement place handler code.
 # place_handler = PlaceHandler(
 #     load_place_mapping(os.path.join(data_path, "DE_placeid-to-wikidata.json")),
 #     load_place_hierarchy(os.path.join(data_path, "DE_place-hierarchy.csv")),
 #     country_codes=["DE"],
 # )
+# @app.get("/test_place_handler")
+# def test_place_handler(place_id: str = Query(..., description="Place ID to filter.")):
+#     return place_handler.resolve_hierarchies(place_id)
+
+
+# Initialize database
+data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
+db = DatabaseHandler(data_path)
+log = logging.getLogger(__name__)
 
 
 # Initialize API
 app = FastAPI(
     title="COVID-19 Local API",
     description="API to get local help information about COVID-19 (hotlines, websites, "
-    "testing sites, ...)",
+    "test sites, health departments)",
     version=__version__,
 )
 
 
-# TODO: Implement place handler code.
-# @app.get("/test_place_handler")
-# def test_place_handler(place_id: str = Query(..., description="Place ID to filter.")):
-#     return place_handler.resolve_hierarchies(place_id)
+# ---------------------------------- Helper functions ----------------------------------
+place_name_query = Query(
+    None,
+    description="The name of the place, e.g. a city, neighborhood, state (either "
+    "place_name or geonames_id must be provided)",
+)
+
+
+geonames_id_query = Query(
+    None,
+    description="The geonames.org id of the place (either place_name or "
+    "geonames_id must be provided)",
+)
 
 
 class SearchProvider(str, Enum):
@@ -69,38 +81,6 @@ def geocoder_to_place(result):
         lon=result.lng,
         search_provider=SearchProvider.geonames,
     )
-
-
-@app.get(
-    "/places",
-    summary="Search for places via free-form query",
-    response_model=List[Place],
-)
-def search_places(
-    q: str = Query(
-        ...,
-        description="Free-form query string (e.g. a city, neighborhood, state, ...)",
-    ),
-    limit: int = Query(5, description="Maximum number of entries to return"),
-    search_provider: SearchProvider = Query(
-        SearchProvider.geonames,
-        description="The search provider (only geonames supported so far)",
-    ),
-):
-    if search_provider == SearchProvider.geonames:
-        # Search geonames API.
-        search_results = geocoder.geonames(
-            q,
-            key=place_request_utils.get_geonames_user(),
-            maxRows=limit,
-            featureClass=["A", "P"],
-        )
-
-        # Format the search results to Place objects and return them.
-        places = [geocoder_to_place(result) for result in search_results]
-        return places
-    else:
-        raise HTTPException(400, f"Search provider not supported: {search_provider}")
 
 
 def find_place(place_name=None, geonames_id=None):
@@ -148,17 +128,37 @@ def get_hierarchy(geonames_id):
     return geonames_ids_hierarchy
 
 
-place_name_query = Query(
-    None,
-    description="The name of the place, e.g. a city, neighborhood, state (either "
-    "place_name or geonames_id must be provided)",
+# ---------------------------------- Endpoints -----------------------------------------
+@app.get(
+    "/places",
+    summary="Search for places via free-form query",
+    response_model=List[Place],
 )
+def search_places(
+    q: str = Query(
+        ...,
+        description="Free-form query string (e.g. a city, neighborhood, state, ...)",
+    ),
+    limit: int = Query(5, description="Maximum number of entries to return"),
+    search_provider: SearchProvider = Query(
+        SearchProvider.geonames,
+        description="The search provider (only geonames supported so far)",
+    ),
+):
+    if search_provider == SearchProvider.geonames:
+        # Search geonames API.
+        search_results = geocoder.geonames(
+            q,
+            key=place_request_utils.get_geonames_user(),
+            maxRows=limit,
+            featureClass=["A", "P"],
+        )
 
-geonames_id_query = Query(
-    None,
-    description="The geonames.org id of the place (either place_name or "
-    "geonames_id must be provided)",
-)
+        # Format the search results to Place objects and return them.
+        places = [geocoder_to_place(result) for result in search_results]
+        return places
+    else:
+        raise HTTPException(400, f"Search provider not supported: {search_provider}")
 
 
 @app.get(
