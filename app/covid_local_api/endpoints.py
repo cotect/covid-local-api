@@ -34,7 +34,7 @@ data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
 log = logging.getLogger(__name__)
 db = DatabaseHandler(data_path)
 
-# TODO: Remove this for now.
+# TODO: Implement place handler code.
 # place_handler = PlaceHandler(
 #     load_place_mapping(os.path.join(data_path, "DE_placeid-to-wikidata.json")),
 #     load_place_hierarchy(os.path.join(data_path, "DE_place-hierarchy.csv")),
@@ -50,7 +50,7 @@ app = FastAPI(
 )
 
 
-# TODO: Remove this for now
+# TODO: Implement place handler code.
 # @app.get("/test_place_handler")
 # def test_place_handler(place_id: str = Query(..., description="Place ID to filter.")):
 #     return place_handler.resolve_hierarchies(place_id)
