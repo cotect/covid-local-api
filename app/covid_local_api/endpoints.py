@@ -167,14 +167,14 @@ def get_all(
     max_distance: float = Query(
         0.5, description="Maximum distance in degrees lon/lat for test sites"
     ),
-    max_count: int = Query(5, description="Maximum number of test sites to return"),
+    limit: int = Query(5, description="Maximum number of test sites to return"),
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
     return {
         "hotlines": get_hotlines(geonames_id=geonames_id)["hotlines"],
         "websites": get_websites(geonames_id=geonames_id)["websites"],
         "test_sites": get_test_sites(
-            geonames_id=geonames_id, max_distance=max_distance, max_count=max_count
+            geonames_id=geonames_id, max_distance=max_distance, limit=limit
         )["test_sites"],
         "health_departments": get_health_departments(geonames_id=geonames_id)[
             "health_departments"
@@ -213,7 +213,7 @@ def get_test_sites(
     max_distance: float = Query(
         0.5, description="Maximum distance in degrees lon/lat for test sites"
     ),
-    max_count: int = Query(5, description="Maximum number of test sites to return"),
+    limit: int = Query(5, description="Maximum number of test sites to return"),
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
 
@@ -225,7 +225,7 @@ def get_test_sites(
     # Get nearby test sites.
     return {
         "test_sites": db.get_nearby(
-            "test_sites", lat, lon, max_distance=max_distance, max_count=max_count
+            "test_sites", lat, lon, max_distance=max_distance, limit=limit
         )
     }
 
