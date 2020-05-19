@@ -74,9 +74,8 @@ def search_places(
         )
 
         # Format the search results and return them.
-        places = []
-        for result in search_results:
-            place = Place(
+        places = [
+            Place(
                 name=result.address,
                 country=result.country,
                 country_code=result.country_code,
@@ -87,7 +86,8 @@ def search_places(
                 lon=result.lng,
                 search_provider="geonames",
             )
-            places.append(place)
+            for result in search_results
+        ]
         return places
     else:
         # TODO: Return proper error message.
