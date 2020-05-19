@@ -5,6 +5,7 @@ import os
 from starlette.responses import RedirectResponse
 from fastapi import FastAPI, Query, HTTPException
 from typing import List
+from enum import Enum
 
 from covid_local_api.__version__ import __version__
 from covid_local_api.db_handler import DatabaseHandler
@@ -49,6 +50,12 @@ app = FastAPI(
 #     return place_handler.resolve_hierarchies(place_id)
 
 
+class SearchProvider(str, Enum):
+    """Enum of the available search providers for the places endpoint"""
+
+    geonames = "geonames"
+
+
 @app.get(
     "/places",
     summary="Search for places via free-form query",
@@ -60,12 +67,12 @@ def search_places(
         description="Free-form query string (e.g. a city, neighborhood, state, ...)",
     ),
     limit: int = Query(5, description="Maximum number of entries to return"),
-    # TODO: Turn this into an Enum.
-    search_provider: str = Query(
-        "geonames", description="The search provider (only geonames supported so far)",
+    search_provider: SearchProvider = Query(
+        SearchProvider.geonames,
+        description="The search provider (only geonames supported so far)",
     ),
 ):
-    if search_provider == "geonames":
+    if search_provider == SearchProvider.geonames:
         # Search geonames API.
         search_results = geocoder.geonames(
             q,
