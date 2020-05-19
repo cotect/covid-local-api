@@ -7,8 +7,8 @@ from pydantic import BaseModel
 
 class Place(BaseModel):
     name: str
-    search_provider: str
     geonames_id: int
+    search_provider: str
     country: Optional[str] = None
     country_code: Optional[str] = None
     state: Optional[str] = None
@@ -85,7 +85,7 @@ class HealthDepartment(BaseModel):
 
 
 class ResultsList(BaseModel):
-    geonames_id: int
+    place: Place
     hotlines: List[Hotline] = []
     websites: List[Website] = []
     test_sites: List[TestSite] = []
