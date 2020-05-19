@@ -79,9 +79,8 @@ def get_from_sheet(sheet, geonames_id):
 #     return place_handler.resolve_hierarchies(place_id)
 
 
-@app.get("/test")
+@app.get("/test", summary="Test endpoint that shows all entries for Berlin Mitte")
 def test():
-    """Show all results for Berlin Mitte."""
     response = RedirectResponse(url="/all?geonames_id=6545310")
     return response
 
@@ -101,42 +100,60 @@ def search_places(
         "geonames", description="The search provider (only geonames supported so far)",
     ),
 ):
-    # Search geonames API.
-    search_results = geocoder.geonames(
-        q, key=geonames_username, maxRows=limit, featureClass=["A", "P"]
-    )
-
-    # Format the search results and return them.
-    places = []
-    for result in search_results:
-        place = Place(
-            name=result.address,
-            country=result.country,
-            country_code=result.country_code,
-            state=result.state,
-            description=result.description + " - " + result.class_description,
-            geonames_id=result.geonames_id,
-            lat=result.lat,
-            lon=result.lng,
-            search_provider="geonames",
+    if search_provider == "geonames":
+        # Search geonames API.
+        search_results = geocoder.geonames(
+            q, key=geonames_username, maxRows=limit, featureClass=["A", "P"]
         )
-        places.append(place)
-    return places
+
+        # Format the search results and return them.
+        places = []
+        for result in search_results:
+            place = Place(
+                name=result.address,
+                country=result.country,
+                country_code=result.country_code,
+                state=result.state,
+                description=result.description + " - " + result.class_description,
+                geonames_id=result.geonames_id,
+                lat=result.lat,
+                lon=result.lng,
+                search_provider="geonames",
+            )
+            places.append(place)
+        return places
+    else:
+        # TODO: Return proper error message.
+        raise ValueError("Search provider not supported:", search_provider)
 
 
 @app.get(
-    "/all",
-    summary="Get all items filtered by a specified region.",
-    response_model=ResultsList,
+    "/all", summary="Get all items for a place", response_model=ResultsList,
 )
 # TODO: Import search via text and zip code, optionally country as filter.
 def get_all(
-    geonames_id: int = Query(..., description="Geonames ID to filter."),
+    place_name: str = Query(
+        None,
+        description="The name of the place (either place_name or geonames_id has to be provided)",
+    ),
+    geonames_id: int = Query(
+        None,
+        description="The geonames id of the place (either place_name or geonames_id has to be provided)",
+    ),
     max_distance: float = Query(
         0.5, description="Maximum distance in degrees lon/lat for test sites"
     ),
     max_count: int = Query(5, description="Maximum number of test sites to return"),
 ):
+    if geonames_id is None and place_name is None:
+        raise ValueError("Either place_name or geonames_id must be provided")
+    elif geonames_id is None:
+        # TODO: Raise error if search returned no results.
+        # Search by place_name and use first search result.
+        geonames_id = search_places(q=place_name, limit=1, search_provider="geonames")[
+            0
+        ].geonames_id
+
     return {
         "hotlines": get_hotlines(geonames_id)["hotlines"],
         "websites": get_websites(geonames_id)["websites"],
