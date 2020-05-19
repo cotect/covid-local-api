@@ -134,7 +134,6 @@ def parse_place_parameters(place_name, geonames_id):
     /places endpoint and return the geonames id of the first search result. If none of 
     both is given, raise an error.
     """
-    print(place_name, geonames_id)
     if geonames_id is None and place_name is None:
         raise ValueError("Either place_name or geonames_id must be provided")
     elif geonames_id is None:
@@ -162,7 +161,6 @@ geonames_id_query = Query(
 @app.get(
     "/all", summary="Get all items for a place", response_model=ResultsList,
 )
-# TODO: Import search via text and zip code, optionally country as filter.
 def get_all(
     place_name: str = place_name_query,
     geonames_id: int = geonames_id_query,
@@ -172,7 +170,6 @@ def get_all(
     max_count: int = Query(5, description="Maximum number of test sites to return"),
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
-    print(geonames_id)
     return {
         "hotlines": get_hotlines(geonames_id=geonames_id)["hotlines"],
         "websites": get_websites(geonames_id=geonames_id)["websites"],
@@ -188,7 +185,6 @@ def get_all(
 @app.get(
     "/hotlines", summary=f"Get hotlines for a place", response_model=ResultsList,
 )
-# TODO: Import search via text and zip code, optionally country as filter.
 def get_hotlines(
     place_name: str = place_name_query, geonames_id: int = geonames_id_query,
 ):
@@ -199,7 +195,6 @@ def get_hotlines(
 @app.get(
     "/websites", summary=f"Get websites for a place", response_model=ResultsList,
 )
-# TODO: Import search via text and zip code, optionally country as filter.
 def get_websites(
     place_name: str = place_name_query, geonames_id: int = geonames_id_query,
 ):
