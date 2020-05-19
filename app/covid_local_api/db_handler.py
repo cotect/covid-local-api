@@ -17,7 +17,7 @@ class DatabaseHandler:
         self.con = sqlite3.connect(":memory:", check_same_thread=False)
 
         # TODO: This should be done regularly or each time the Google Sheets database
-        # updates.
+        #   updates.
         # Download excel from Google Sheets, read with pandas and write to database.
         url = "https://docs.google.com/spreadsheets/d/1AXadba5Si7WbJkfqQ4bN67cbP93oniR-J6uN0_Av958/export?format=xlsx"
         dfs = pd.read_excel(url, sheet_name=None)

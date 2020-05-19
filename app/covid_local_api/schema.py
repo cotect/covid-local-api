@@ -85,6 +85,7 @@ class HealthDepartment(BaseModel):
 
 
 class ResultsList(BaseModel):
+    geonames_id: int
     hotlines: List[Hotline] = []
     websites: List[Website] = []
     test_sites: List[TestSite] = []

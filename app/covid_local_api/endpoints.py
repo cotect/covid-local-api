@@ -169,6 +169,7 @@ def get_all(
     geonames_ids_hierarchy = get_hierarchy(geonames_id)
     lat, lon = get_lat_lon(geonames_id)
     return {
+        "geonames_id": geonames_id,
         "hotlines": db.get("hotlines", geonames_ids_hierarchy),
         "websites": db.get("websites", geonames_ids_hierarchy),
         "test_sites": db.get_nearby(
@@ -186,7 +187,10 @@ def get_hotlines(
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
     geonames_ids_hierarchy = get_hierarchy(geonames_id)
-    return {"hotlines": db.get("hotlines", geonames_ids_hierarchy)}
+    return {
+        "geonames_id": geonames_id,
+        "hotlines": db.get("hotlines", geonames_ids_hierarchy),
+    }
 
 
 @app.get(
@@ -197,7 +201,10 @@ def get_websites(
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
     geonames_ids_hierarchy = get_hierarchy(geonames_id)
-    return {"websites": db.get("websites", geonames_ids_hierarchy)}
+    return {
+        "geonames_id": geonames_id,
+        "websites": db.get("websites", geonames_ids_hierarchy),
+    }
 
 
 @app.get(
@@ -216,9 +223,10 @@ def get_test_sites(
     geonames_id = parse_place_parameters(place_name, geonames_id)
     lat, lon = get_lat_lon(geonames_id)
     return {
+        "geonames_id": geonames_id,
         "test_sites": db.get_nearby(
             "test_sites", lat, lon, max_distance=max_distance, limit=limit
-        )
+        ),
     }
 
 
@@ -235,10 +243,15 @@ def get_health_departments(
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
     geonames_ids_hierarchy = get_hierarchy(geonames_id)
-    return {"health_departments": db.get("health_departments", geonames_ids_hierarchy)}
+    return {
+        "geonames_id": geonames_id,
+        "health_departments": db.get("health_departments", geonames_ids_hierarchy),
+    }
 
 
-@app.get("/test", summary="Test endpoint that shows all entries for Berlin Mitte")
+@app.get(
+    "/test", summary="Shows all entries for Berlin Mitte (redirects to /all endpoint)",
+)
 def test():
     response = RedirectResponse(url="/all?geonames_id=6545310")
     return response
