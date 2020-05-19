@@ -52,27 +52,6 @@ app = FastAPI(
 )
 
 
-def get_from_sheet(sheet, geonames_id):
-    # Find all hierarchically higher areas (this contains the area itself!).
-    # This is important if geonames_id belongs e.g. to Berlin Mitte but there's a hotline for Berlin.
-    hierarchy = geocoder.geonames(
-        geonames_id, key=geonames_username, method="hierarchy"
-    )
-    hierarchy = hierarchy[::-1]  # reverse, so that more local areas come first
-
-    # TODO: Maybe also search for children here, e.g. if geonames_id belongs to Berlin but the
-    #   health departments are in the districts. Not sure if it makes sense to search only for
-    #   direct children or whether we would need all children (which would be a massive overload).
-
-    # Get all geonames ids
-    all_geonames_ids = [item.geonames_id for item in hierarchy]
-    print(all_geonames_ids)
-
-    # Get all matching entries from the database
-    results = db.get(sheet, all_geonames_ids)
-    return results
-
-
 # TODO: Remove this for now
 # @app.get("/test_place_handler")
 # def test_place_handler(place_id: str = Query(..., description="Place ID to filter.")):
@@ -189,7 +168,7 @@ def get_hotlines(
     place_name: str = place_name_query, geonames_id: int = geonames_id_query,
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
-    return {"hotlines": get_from_sheet("hotlines", geonames_id)}
+    return {"hotlines": db.get("hotlines", geonames_id)}
 
 
 @app.get(
@@ -199,7 +178,7 @@ def get_websites(
     place_name: str = place_name_query, geonames_id: int = geonames_id_query,
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
-    return {"websites": get_from_sheet("websites", geonames_id)}
+    return {"websites": db.get("websites", geonames_id)}
 
 
 @app.get(
@@ -241,7 +220,7 @@ def get_health_departments(
     place_name: str = place_name_query, geonames_id: int = geonames_id_query,
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
-    return {"health_departments": get_from_sheet("health_departments", geonames_id)}
+    return {"health_departments": db.get("health_departments", geonames_id)}
 
 
 # Use function names as operation IDs
