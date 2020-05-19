@@ -56,7 +56,8 @@ class SearchProvider(str, Enum):
     geonames = "geonames"
 
 
-def geonames_to_place(result):
+def geocoder_to_place(result):
+    """Convert a result object from geocoder to a Place object"""
     return Place(
         name=result.address,
         country=result.country,
@@ -66,7 +67,7 @@ def geonames_to_place(result):
         geonames_id=result.geonames_id,
         lat=result.lat,
         lon=result.lng,
-        search_provider="geonames",
+        search_provider=SearchProvider.geonames,
     )
 
 
@@ -95,32 +96,27 @@ def search_places(
             featureClass=["A", "P"],
         )
 
-        # Format the search results and return them.
-        places = [
-            Place(
-                name=result.address,
-                country=result.country,
-                country_code=result.country_code,
-                state=result.state,
-                description=result.description + " - " + result.class_description,
-                geonames_id=result.geonames_id,
-                lat=result.lat,
-                lon=result.lng,
-                search_provider="geonames",
-            )
-            for result in search_results
-        ]
+        # Format the search results to Place objects and return them.
+        places = [geocoder_to_place(result) for result in search_results]
         return places
     else:
         raise HTTPException(400, f"Search provider not supported: {search_provider}")
 
 
-def parse_place_parameters(place_name, geonames_id):
-    """Returns the correct geonames id for the given query parameters. 
+def find_place(place_name=None, geonames_id=None):
+    """Finds and returns the place for the given query parameters. 
     
-    If geonames_id is given, simply return it. If place_name is given, search the 
-    /places endpoint and return the geonames id of the first search result. If none of 
-    both is given, raise an error.
+    If geonames_id is given, simply get some more information about it. If 
+    place_name is given, search the /places endpoint and return the first result. If 
+    neither is given, raise an error.
+    
+    Args:
+        place_name (str, optional): The name of the place to search for (used as query 
+            parameter for the places endpoint)
+        geonames_id (int, optional): The geonames.org id of the place
+
+    Returns:
+        Place: The found place
     """
     if geonames_id is None and place_name is None:
         raise HTTPException(400, "Either place_name or geonames_id must be provided")
@@ -132,15 +128,14 @@ def parse_place_parameters(place_name, geonames_id):
                 400, f"Could not find any match for place_name: {place_name}"
             )
         else:
-            # return places[0].geonames_id
             return places[0]
     else:
+        # Get details for this geonames_id and return as Place object.
         search_result = geocoder.geonames(
             geonames_id, key=place_request_utils.get_geonames_user(), method="details"
         )[0]
-        place = geonames_to_place(search_result)
+        place = geocoder_to_place(search_result)
         return place
-        # return geonames_id
 
 
 def get_hierarchy(geonames_id):
@@ -151,14 +146,6 @@ def get_hierarchy(geonames_id):
     hierarchy = hierarchy[::-1]  # reverse, so that more local areas come first
     geonames_ids_hierarchy = [item.geonames_id for item in hierarchy]
     return geonames_ids_hierarchy
-
-
-# def get_lat_lon(geonames_id):
-#     """Returns the latitude and longitude of the place"""
-#     details = geocoder.geonames(
-#         geonames_id, key=place_request_utils.get_geonames_user(), method="details"
-#     )
-#     return details.lat, details.lng
 
 
 place_name_query = Query(
@@ -185,10 +172,8 @@ def get_all(
     ),
     limit: int = Query(5, description="Maximum number of test sites to return"),
 ):
-    # geonames_id = parse_place_parameters(place_name, geonames_id)
-    place = parse_place_parameters(place_name, geonames_id)
+    place = find_place(place_name, geonames_id)
     geonames_ids_hierarchy = get_hierarchy(place.geonames_id)
-    # lat, lon = get_lat_lon(geonames_id)
     return {
         "place": place,
         "hotlines": db.get("hotlines", geonames_ids_hierarchy),
@@ -206,7 +191,7 @@ def get_all(
 def get_hotlines(
     place_name: str = place_name_query, geonames_id: int = geonames_id_query,
 ):
-    place = parse_place_parameters(place_name, geonames_id)
+    place = find_place(place_name, geonames_id)
     geonames_ids_hierarchy = get_hierarchy(place.geonames_id)
     return {
         "place": place,
@@ -220,7 +205,7 @@ def get_hotlines(
 def get_websites(
     place_name: str = place_name_query, geonames_id: int = geonames_id_query,
 ):
-    place = parse_place_parameters(place_name, geonames_id)
+    place = find_place(place_name, geonames_id)
     geonames_ids_hierarchy = get_hierarchy(place.geonames_id)
     return {
         "place": place,
@@ -241,7 +226,7 @@ def get_test_sites(
     ),
     limit: int = Query(5, description="Maximum number of test sites to return"),
 ):
-    place = parse_place_parameters(place_name, geonames_id)
+    place = find_place(place_name, geonames_id)
     # lat, lon = get_lat_lon(geonames_id)
     return {
         "geonames_id": geonames_id,
@@ -262,7 +247,7 @@ def get_test_sites(
 def get_health_departments(
     place_name: str = place_name_query, geonames_id: int = geonames_id_query,
 ):
-    place = parse_place_parameters(place_name, geonames_id)
+    place = find_place(place_name, geonames_id)
     geonames_ids_hierarchy = get_hierarchy(place.geonames_id)
     return {
         "place": place,
