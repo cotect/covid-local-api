@@ -1,7 +1,5 @@
-import logging
 import geocoder
 import uvicorn
-import os
 from starlette.responses import RedirectResponse
 from fastapi import FastAPI, Query, HTTPException
 from typing import List
@@ -22,6 +20,7 @@ from covid_local_api.utils import endpoint_utils, place_request_utils
 #     load_place_hierarchy,
 #     load_place_mapping,
 # )
+# data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
 # place_handler = PlaceHandler(
 #     load_place_mapping(os.path.join(data_path, "DE_placeid-to-wikidata.json")),
 #     load_place_hierarchy(os.path.join(data_path, "DE_place-hierarchy.csv")),
@@ -32,13 +31,8 @@ from covid_local_api.utils import endpoint_utils, place_request_utils
 #     return place_handler.resolve_hierarchies(place_id)
 
 
-# Initialize database
-data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
-db = DatabaseHandler(data_path)
-log = logging.getLogger(__name__)
-
-
-# Initialize API
+# Initialize database and API
+db = DatabaseHandler(update_every_seconds=86400)  # update data once per day
 app = FastAPI(
     title="COVID-19 Local API",
     description="API to get local help information about COVID-19 (hotlines, websites, "

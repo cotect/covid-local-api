@@ -1,30 +1,50 @@
 import pandas as pd
 import sqlite3
 import math
+import threading
 
 
 class DatabaseHandler:
-    def __init__(self, data_path="data"):
-        """Downloads the Google Sheet and stores its data as in-memory sqlite3 database.
+    def __init__(self, update_every_seconds=3600):
+        """Initializes the database connection. Downloads the Google Sheet, stores 
+        its data as in-memory sqlite3 database and updates it regularly.
 
         Args:
-            data_path (str, optional): The directory where the downloaded data should be 
-                stored. Defaults to "data".
+            update_every_seconds(int, optional): If not None, the database will be 
+                updated with the current data from the Google Sheet at this time 
+                interval in seconds. Defaults to 3600 (equals 1 hour).
         """
+        self.update_every_seconds = update_every_seconds
+        self.con = None
+        self._update_database()
+
+    def _update_database(self):
+        """Creates new database with the current data from the Google Sheet. 
+        
+        If self.update_every_seconds is not None, this will automatically schedule 
+        the next update.
+        """
+        # Close old database. This will delete it as it is only stored in memory.
+        # See https://stackoverflow.com/questions/48732439/deleting-a-database-file-in-memory
+        if self.con is not None:
+            print("Deleting old database...")
+            self.con.close()
+
+        print("Creating new database...")
         # Create in-memory sqlite3 database.
         # We can use check_same_thread because we only read from the database, so
         # there's no concurrency
         self.con = sqlite3.connect(":memory:", check_same_thread=False)
 
-        # TODO: This should be done regularly or each time the Google Sheets database
-        #   updates.
-        # Download excel from Google Sheets, read with pandas and write to database.
+        # Download excel file from Google Sheets, read it with pandas and write to
+        # database.
         url = "https://docs.google.com/spreadsheets/d/1AXadba5Si7WbJkfqQ4bN67cbP93oniR-J6uN0_Av958/export?format=xlsx"
         dfs = pd.read_excel(url, sheet_name=None)
         for table, df in dfs.items():
             df.to_sql(table, self.con)
 
-        # Make database return dicts instead of tuples (https://stackoverflow.com/questions/3300464/how-can-i-get-dict-from-sqlite-query)
+        # Make database return dicts instead of tuples.
+        # From: https://stackoverflow.com/questions/3300464/how-can-i-get-dict-from-sqlite-query
         def dict_factory(cursor, row):
             d = {}
             for idx, col in enumerate(cursor.description):
@@ -32,6 +52,15 @@ class DatabaseHandler:
             return d
 
         self.con.row_factory = dict_factory
+
+        print("Database successfully updated")
+
+        # Schedule next update of the database.
+        if self.update_every_seconds is not None:
+            print(
+                f"Scheduling next database update in {self.update_every_seconds} seconds"
+            )
+            threading.Timer(self.update_every_seconds, self._update_database).start()
 
     def get(self, sheet, geonames_ids):
         """Returns all entries from `sheet`, which match one of the ids in 
