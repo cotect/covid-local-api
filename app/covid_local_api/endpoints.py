@@ -109,7 +109,7 @@ def parse_place_parameters(place_name, geonames_id):
     both is given, raise an error.
     """
     if geonames_id is None and place_name is None:
-        raise ValueError("Either place_name or geonames_id must be provided")
+        raise HTTPException(400, "Either place_name or geonames_id must be provided")
     elif geonames_id is None:
         # Search by place_name and use first search result.
         places = search_places(q=place_name, limit=1, search_provider="geonames")
