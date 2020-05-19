@@ -39,48 +39,25 @@ class DatabaseHandler:
 
         self.con.row_factory = dict_factory
 
-    def get(self, sheet, geonames_id, include_hierarchy=True):
-        """Returns all entries from `sheet`, filtered by `geonames_id` and its 
-        hierarchical parents. 
-        
-        If include_hierarchy is True, this method also looks for matches with 
-        hierarchical parents (e.g. if geonames_id belongs to a city, it looks for items 
-        for the state and country).
+    def get(self, sheet, geonames_ids):
+        """Returns all entries from `sheet`, which match one of the ids in 
+        `geonames_ids`.
         
         Args:
             sheet (str): The worksheet in the Google Sheet
-            geonames_id (int): The geonames_id of the place to search for
-            include_hierarchy (boolean, optional): Whether to search for hierarchical 
-                parents. Defaults to False.
+            geonames_ids (int): The geonames_ids of the places to search for
 
         Returns:
             (list of dict): Filtered database entries as key-value dicts
         """
-        if include_hierarchy:
-            hierarchy = geocoder.geonames(
-                geonames_id,
-                key=place_request_utils.get_geonames_user(),
-                method="hierarchy",
-            )
-            hierarchy = hierarchy[::-1]  # reverse, so that more local areas come first
-            all_geonames_ids = [item.geonames_id for item in hierarchy]
-
-            # TODO: Maybe also search for children here, e.g. if geonames_id belongs to
-            #   Berlin but the health departments are in the districts. Not sure if it
-            #   makes sense to search only for direct children or whether we would need
-            #   all children (which would be a massive overload).
-        else:
-            all_geonames_ids = [geonames_id]
-
-        # Make SQL request on database
         cur = self.con.execute(
             f"SELECT * FROM {sheet} WHERE geonames_id "
-            f"IN ({', '.join(map(str, all_geonames_ids))})"
+            f"IN ({', '.join(map(str, geonames_ids))})"
         )
         dicts = cur.fetchall()
         return dicts
 
-    def get_nearby(self, sheet, geonames_id, max_distance=0.5, limit=5):
+    def get_nearby(self, sheet, lat, lon, max_distance=0.5, limit=5):
         """Returns nearby entries from `sheet` for a latitude/longitude pair, sorted by 
         distance.
 
@@ -92,7 +69,8 @@ class DatabaseHandler:
 
         Args:
             sheet (str): The worksheet in the Google Sheet
-            geonames_id (int): The geonames id of the place to search for
+            lat (float): The latitude of the place
+            lon (float): The longitude of the place
             max_distance (float, optional): Maximum distance to search for objects (in 
                 degrees lat/lon; default: 0.5)
             limit (float, optional): Maximum number of elements to return (default: 5). 
@@ -102,13 +80,6 @@ class DatabaseHandler:
         Returns:
             list of dict: Filtered database entries as key-value dicts
         """
-        # Get latitude/longitude for this geonames_id
-        details = geocoder.geonames(
-            geonames_id, key=place_request_utils.get_geonames_user(), method="details"
-        )
-        lat = details.lat
-        lon = details.lng
-
         # Query elements from the sheet that are closer to lat/lon than max_distance,
         # order them by the distance, and limit number of rows to limit.
         # Distance is in degrees lat/lon, see comment in docstring.

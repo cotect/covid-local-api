@@ -125,6 +125,24 @@ def parse_place_parameters(place_name, geonames_id):
         return geonames_id
 
 
+def get_hierarchy(geonames_id):
+    """Returns geonames ids of hierarchical parents (e.g. country for a city)"""
+    hierarchy = geocoder.geonames(
+        geonames_id, key=place_request_utils.get_geonames_user(), method="hierarchy",
+    )
+    hierarchy = hierarchy[::-1]  # reverse, so that more local areas come first
+    geonames_ids_hierarchy = [item.geonames_id for item in hierarchy]
+    return geonames_ids_hierarchy
+
+
+def get_lat_lon(geonames_id):
+    """Returns the latitude and longitude of the place"""
+    details = geocoder.geonames(
+        geonames_id, key=place_request_utils.get_geonames_user(), method="details"
+    )
+    return details.lat, details.lng
+
+
 place_name_query = Query(
     None,
     description="The name of the place, e.g. a city, neighborhood, state (either "
@@ -150,15 +168,15 @@ def get_all(
     limit: int = Query(5, description="Maximum number of test sites to return"),
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
+    geonames_ids_hierarchy = get_hierarchy(geonames_id)
+    lat, lon = get_lat_lon(geonames_id)
     return {
-        "hotlines": get_hotlines(geonames_id=geonames_id)["hotlines"],
-        "websites": get_websites(geonames_id=geonames_id)["websites"],
-        "test_sites": get_test_sites(
-            geonames_id=geonames_id, max_distance=max_distance, limit=limit
-        )["test_sites"],
-        "health_departments": get_health_departments(geonames_id=geonames_id)[
-            "health_departments"
-        ],
+        "hotlines": db.get("hotlines", geonames_ids_hierarchy),
+        "websites": db.get("websites", geonames_ids_hierarchy),
+        "test_sites": db.get_nearby(
+            "test_sites", lat, lon, max_distance=max_distance, limit=limit
+        ),
+        "health_departments": db.get("health_departments", geonames_ids_hierarchy),
     }
 
 
@@ -169,7 +187,8 @@ def get_hotlines(
     place_name: str = place_name_query, geonames_id: int = geonames_id_query,
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
-    return {"hotlines": db.get("hotlines", geonames_id)}
+    geonames_ids_hierarchy = get_hierarchy(geonames_id)
+    return {"hotlines": db.get("hotlines", geonames_ids_hierarchy)}
 
 
 @app.get(
@@ -179,7 +198,8 @@ def get_websites(
     place_name: str = place_name_query, geonames_id: int = geonames_id_query,
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
-    return {"websites": db.get("websites", geonames_id)}
+    geonames_ids_hierarchy = get_hierarchy(geonames_id)
+    return {"websites": db.get("websites", geonames_ids_hierarchy)}
 
 
 @app.get(
@@ -196,9 +216,10 @@ def get_test_sites(
     limit: int = Query(5, description="Maximum number of test sites to return"),
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
+    lat, lon = get_lat_lon(geonames_id)
     return {
         "test_sites": db.get_nearby(
-            "test_sites", geonames_id, max_distance=max_distance, limit=limit
+            "test_sites", lat, lon, max_distance=max_distance, limit=limit
         )
     }
 
@@ -214,7 +235,8 @@ def get_health_departments(
     place_name: str = place_name_query, geonames_id: int = geonames_id_query,
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
-    return {"health_departments": db.get("health_departments", geonames_id)}
+    geonames_ids_hierarchy = get_hierarchy(geonames_id)
+    return {"health_departments": db.get("health_departments", geonames_ids_hierarchy)}
 
 
 # Use function names as operation IDs
