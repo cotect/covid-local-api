@@ -3,7 +3,7 @@ import geocoder
 import uvicorn
 import os
 from starlette.responses import RedirectResponse
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException
 from typing import List
 
 from covid_local_api.__version__ import __version__
@@ -60,6 +60,7 @@ def search_places(
         description="Free-form query string (e.g. a city, neighborhood, state, ...)",
     ),
     limit: int = Query(5, description="Maximum number of entries to return"),
+    # TODO: Turn this into an Enum.
     search_provider: str = Query(
         "geonames", description="The search provider (only geonames supported so far)",
     ),
@@ -90,8 +91,7 @@ def search_places(
         ]
         return places
     else:
-        # TODO: Return proper error message.
-        raise ValueError("Search provider not supported:", search_provider)
+        raise HTTPException(400, f"Search provider not supported: {search_provider}")
 
 
 def parse_place_parameters(place_name, geonames_id):
@@ -106,8 +106,12 @@ def parse_place_parameters(place_name, geonames_id):
     elif geonames_id is None:
         # Search by place_name and use first search result.
         places = search_places(q=place_name, limit=1, search_provider="geonames")
-        return places[0].geonames_id
-        # TODO: Raise error if search returned no results.
+        if len(places) == 0:
+            raise HTTPException(
+                400, f"Could not find any match for place_name: {place_name}"
+            )
+        else:
+            return places[0].geonames_id
     else:
         return geonames_id
 
