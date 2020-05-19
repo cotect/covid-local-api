@@ -41,8 +41,6 @@ db = DatabaseHandler(data_path)
 #     country_codes=["DE"],
 # )
 
-# TODO: Change this to another way.
-geonames_username = random.choice(place_request_utils.GEONAMES_USERS)
 
 # Initialize API
 app = FastAPI(
@@ -82,7 +80,10 @@ def search_places(
     if search_provider == "geonames":
         # Search geonames API.
         search_results = geocoder.geonames(
-            q, key=geonames_username, maxRows=limit, featureClass=["A", "P"]
+            q,
+            key=place_request_utils.get_geonames_user(),
+            maxRows=limit,
+            featureClass=["A", "P"],
         )
 
         # Format the search results and return them.
@@ -195,16 +196,9 @@ def get_test_sites(
     limit: int = Query(5, description="Maximum number of test sites to return"),
 ):
     geonames_id = parse_place_parameters(place_name, geonames_id)
-
-    # Get latitude/longitude for this geonames_id.
-    details = geocoder.geonames(geonames_id, key=geonames_username, method="details")
-    lat = details.lat
-    lon = details.lng
-
-    # Get nearby test sites.
     return {
         "test_sites": db.get_nearby(
-            "test_sites", lat, lon, max_distance=max_distance, limit=limit
+            "test_sites", geonames_id, max_distance=max_distance, limit=limit
         )
     }
 

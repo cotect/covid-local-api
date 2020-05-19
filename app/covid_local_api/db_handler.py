@@ -3,6 +3,10 @@ import sqlite3
 import urllib.request
 import math
 import os
+import random
+import geocoder
+
+from utils import place_request_utils
 
 
 class DatabaseHandler:
@@ -45,7 +49,7 @@ class DatabaseHandler:
         
         Args:
             sheet (str): The worksheet in the Google Sheet
-            geonames_id (int): The geonames_id to search for
+            geonames_id (int): The geonames_id of the place to search for
             include_hierarchy (boolean, optional): Whether to search for hierarchical 
                 parents. Defaults to False.
 
@@ -54,7 +58,9 @@ class DatabaseHandler:
         """
         if include_hierarchy:
             hierarchy = geocoder.geonames(
-                geonames_id, key=geonames_username, method="hierarchy"
+                geonames_id,
+                key=place_request_utils.get_geonames_user(),
+                method="hierarchy",
             )
             hierarchy = hierarchy[::-1]  # reverse, so that more local areas come first
             all_geonames_ids = [item.geonames_id for item in hierarchy]
@@ -74,7 +80,7 @@ class DatabaseHandler:
         dicts = cur.fetchall()
         return dicts
 
-    def get_nearby(self, sheet, lat, lon, max_distance=0.5, limit=5):
+    def get_nearby(self, sheet, geonames_id, max_distance=0.5, limit=5):
         """Returns nearby entries from `sheet` for a latitude/longitude pair, sorted by 
         distance.
 
@@ -86,8 +92,7 @@ class DatabaseHandler:
 
         Args:
             sheet (str): The worksheet in the Google Sheet
-            lon (float or str): Longitude of the target location
-            lat (float or str): Latitude of the target location
+            geonames_id (int): The geonames id of the place to search for
             max_distance (float, optional): Maximum distance to search for objects (in 
                 degrees lat/lon; default: 0.5)
             limit (float, optional): Maximum number of elements to return (default: 5). 
@@ -97,6 +102,13 @@ class DatabaseHandler:
         Returns:
             list of dict: Filtered database entries as key-value dicts
         """
+        # Get latitude/longitude for this geonames_id
+        details = geocoder.geonames(
+            geonames_id, key=place_request_utils.get_geonames_user(), method="details"
+        )
+        lat = details.lat
+        lon = details.lng
+
         # Query elements from the sheet that are closer to lat/lon than max_distance,
         # order them by the distance, and limit number of rows to limit.
         # Distance is in degrees lat/lon, see comment in docstring.

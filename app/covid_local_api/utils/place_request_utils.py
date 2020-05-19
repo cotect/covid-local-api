@@ -13,6 +13,11 @@ GEONAMES_ENDPOINT = os.getenv("GEONAMES_ENDPOINT", "http://api.geonames.org")
 GEONAMES_ENDPOINT_V3 = os.getenv("GEONAMES_ENDPOINT_V3", "http://www.geonames.org")
 GEONAMES_USERS = os.getenv("GEONAMES_USERS", "sap_ekg").replace(" ", "").split(",")
 
+# TODO: Refactor this.
+def get_geonames_user():
+    """Return a random geonames username"""
+    return random.choice(GEONAMES_USERS)
+
 OSM_NOMATIM_ENDPOINT = os.getenv(
     "OSM_NOMATIM_ENDPOINT", "https://nominatim.openstreetmap.org"
 )
