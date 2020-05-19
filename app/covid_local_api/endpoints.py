@@ -56,12 +56,6 @@ app = FastAPI(
 #     return place_handler.resolve_hierarchies(place_id)
 
 
-@app.get("/test", summary="Test endpoint that shows all entries for Berlin Mitte")
-def test():
-    response = RedirectResponse(url="/all?geonames_id=6545310")
-    return response
-
-
 @app.get(
     "/places",
     summary="Search for places via free-form query",
@@ -237,6 +231,12 @@ def get_health_departments(
     geonames_id = parse_place_parameters(place_name, geonames_id)
     geonames_ids_hierarchy = get_hierarchy(geonames_id)
     return {"health_departments": db.get("health_departments", geonames_ids_hierarchy)}
+
+
+@app.get("/test", summary="Test endpoint that shows all entries for Berlin Mitte")
+def test():
+    response = RedirectResponse(url="/all?geonames_id=6545310")
+    return response
 
 
 # Use function names as operation IDs
