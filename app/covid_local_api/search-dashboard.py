@@ -3,7 +3,7 @@ import requests
 
 # import pandas as pd
 
-API_URL = "http://127.0.0.1:8000"
+API_URL = "http://127.0.0.1:80"
 
 st.title("Search for local Corona information")
 "Enter your location and we will show you local hotlines, websites, test sites, health departments, and restrictions."
