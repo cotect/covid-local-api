@@ -2,84 +2,91 @@
 
 ![](docs/images/github-banner.png)
 
-REST API for location-based information about COVID-19 / Coronavirus (hotlines, test sites, health departments, ...). 
+REST API for location-based information about COVID-19 and Coronavirus (hotlines, test sites, health departments, ...). 
 
 
 ## What is this good for?
 
 Websites and apps can significantly help people in the Corona crisis – by tracing contacts, checking symptoms, or providing targeted information. However, actual help in case of an infection or other problems is often local: Cities have their own hotlines; test sites and health departments are distributed across the country; and restrictions vary from region to region. We want to bridge this gap between digital tools and local help by providing an API with local information (hotlines, websites, test sites, health departments, restrictions). Developers can integrate this information into their tools in order to show the user specific help offers based on his location. 
 
-Check out our [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to get an idea of which data our API offers!
+Check out our [search dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to get an idea of which data our API offers!
 
-![](docs/images/dashboard.png)
-
-
-## Live version
-
-The API is now live! For a demo, head over to: [http://ec2-3-90-67-33.compute-1.amazonaws.com/all?geonames_id=6545310](http://ec2-3-90-67-33.compute-1.amazonaws.com/all?geonames_id=6545310)
-
-This will return all local information for Berlin Mitte as a JSON. (Note that the server URL will change regularly at this stage).
-
-You can also use the [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to search through all the information we have. 
+<!--![](docs/images/dashboard.png)-->
 
 
-## Endpoints
+## Usage
 
-Five endpoints to get information:
+You can try out the API using our live deployment at: 
+http://ec2-3-90-67-33.compute-1.amazonaws.com
 
-- `/all`: General endpoint for all information (hotlines, websites, test sites and health departments)
-- `/hotlines`: Phone hotlines for the location and any superior areas (e.g. states, countries)
-- `/websites`: Information websites for the location and any superior areas (e.g. states, countries)
-- `/health_departments`: Health deparments responsible for this location
-- `/test_sites`: Nearby test sites, selected and sorted by distance to the location
+For example, to get all local information for Berlin Mitte, go to:
 
-One additional endpoint to search for locations (see also below):
+    http://ec2-3-90-67-33.compute-1.amazonaws.com/all?place_name=Berlin&20Mitte
 
-- `/geonames`: Wrapper around the [geonames.org location search](http://www.geonames.org/export/geonames-search.html) with sensible defaults. Returns locations based on a query string. Use like `/geonames?q=<city, postal code, ...>`.
+The data is returned as JSON. Note that information for hierachically higher areas 
+(e.g. country-wide hotlines) are automatically returned as well. 
+
+Above, we used the `/all` endpoint to request all information from the database. You can 
+also use the more specific endpoints `/hotlines`, `/websites`, `/test_sites` and 
+`/health_departments`, which will only a return a subset of the data, e.g.:
+
+    http://ec2-3-90-67-33.compute-1.amazonaws.com/hotlines?place_name=Berlin&20Mitte
+
+To specify the location of the query, we support two options: You can either use the 
+`place_name` parameter like above (with a city, neighborhood, state, ...). Under the 
+hood, this searches on geonames.org and simply uses the first result to search our 
+database. To get more control over the place selection (e.g. if the place name is 
+ambiguous), you can use the `/places` endpoint:
+
+    http://ec2-3-90-67-33.compute-1.amazonaws.com/places?q=Berlin&20Mitte
+
+This returns a list of places for your query. It uses the 
+[geonames.org location search](http://www.geonames.org/export/geonames-search.html) 
+with sensible defaults (e.g. search only for cities and districts) and clean 
+formatting. If you found the correct place among these results, you can extract its 
+`geonames_id` and pass it to the other endpoints like this:
+
+    http://ec2-3-90-67-33.compute-1.amazonaws.com/all?geonames_id=2950159
+
+For more details on endpoints, query parameters, and output formats, please have a 
+look at the [Swagger docs](http://ec2-3-90-67-33.compute-1.amazonaws.com/docs).
 
 
-## Location search
-
-For all endpoints, you indicate the location via query parameters (i.e. `?key=value` after the endpoint). The API offers three ways to search for a location:
-
-- `?placename=<city, area, ...>`: Coming soon
-- `?postalcode=<number>`: Coming soon
-- `?geonames_id=<id>`: ID for a location on [geonames.org](geonames.org).org. You can retrieve the ID manually by searching on [geonames.org](geonames.org) (the ID is the number in the blue box on the right hand side of the search result view), or by using [their API](http://www.geonames.org/export/web-services.html). To make things easier, we offer a wrapper around their [location search](http://www.geonames.org/export/geonames-search.html) at the `/geonames` endpoint (see above). 
-
-
-## Output
-
-All endpoints return a JSON in the format:
-
-    {
-        "hotlines": [...],
-        "websites": [...],
-        "health_deparments": [...],
-        "test_sites": [...]
-    }
-
-If you use the `/all` endpoint, all fields will be populated. If you use one of the more specific enpoints, the other fields will be empty. 
-
-
-## Local deployment 
+## Running the API locally
 
 To run the API locally, clone this repo and run the following command:
 
     cd ./covid-local-api/app/covid_local_api
     uvicorn local_test:app --reload
 
-The API should now be accessible at 127.0.0.1:8000. You can also deploy the API with docker, using the dockerfile in the repo. 
+The API should now be accessible at 127.0.0.1:8000. You can also deploy the API with 
+docker, using the dockerfile in the repo. 
+
+To start the [search dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600), 
+run:
+
+    streamlit run search-dashboard.py
+
+This will start the dashboard on port 8501. Note that the dockerfile automatically 
+starts the dashboard along with the API (using the `prestart.sh` file). 
 
 
 ## Data
 
-Help us collect new data with our Google Form: [https://bit.ly/covid-local-form](https://bit.ly/covid-local-form)
+Help us collect new data with our Google Form: 
+[https://bit.ly/covid-local-form](https://bit.ly/covid-local-form)
 
-The data for this project is stored in a [Google Sheet](https://docs.google.com/spreadsheets/d/1AXadba5Si7WbJkfqQ4bN67cbP93oniR-J6uN0_Av958/edit?usp=sharing) (note that there is one worksheet for each data type). If you think that any of the data is wrong, please add a comment directly to the document or write to johannes.rieke@gmail.com. You can also use our [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to search through the data. 
+The data for this project is stored in a 
+[Google Sheet](https://docs.google.com/spreadsheets/d/1AXadba5Si7WbJkfqQ4bN67cbP93oniR-J6uN0_Av958/edit?usp=sharing) 
+(note that there is one worksheet for each data type). If you think that any of the 
+data is wrong, please add a comment directly to the document or write to 
+johannes.rieke@gmail.com. You can also use our 
+[dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to search through the 
+data. 
 
 
 ## Requirements
 
-TBD
+Python 3.7 and all packages in requirements.txt
 
 
