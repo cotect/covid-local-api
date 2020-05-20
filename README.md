@@ -1,6 +1,6 @@
-<p align="center"><strong>REST API for location-based information on COVID-19<br>(hotlines, websites, test sites, health departments)</strong></p>
-
 ![](docs/images/github-banner.png)
+
+<p align="center"><strong>REST API for location-based information on COVID-19<br>(hotlines, websites, test sites, health departments)</strong></p>
 
 
 ## What is this good for?
