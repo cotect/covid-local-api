@@ -51,6 +51,7 @@ formatting. If you found the correct place among these results, you can extract 
 For more details on endpoints, query parameters, and output formats, please have a 
 look at the [Swagger docs](http://ec2-3-90-67-33.compute-1.amazonaws.com/docs).
 
+<br>
 
 ## Running the API locally
 
@@ -70,6 +71,7 @@ run:
 This will start the dashboard on port 8501. Note that the dockerfile automatically 
 starts the dashboard along with the API (using the `prestart.sh` file). 
 
+<br>
 
 ## Data
 
@@ -84,6 +86,7 @@ johannes.rieke@gmail.com. You can also use our
 [dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to search through the 
 data. 
 
+<br>
 
 ## Requirements
 
