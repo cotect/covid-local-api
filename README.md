@@ -12,6 +12,7 @@ Websites and apps can significantly help people in the Corona crisis – by trac
 
 Check out our [search dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to get an idea of which data our API offers!
 
+<br>
 
 ## Usage
 
