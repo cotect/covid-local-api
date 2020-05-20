@@ -1,13 +1,11 @@
-# covid-local-api
-
-<!--![](docs/images/github-banner.png)-->
-
 <p align="center"><strong>REST API for location-based information on COVID-19 (hotlines, websites, test sites, health departments)</strong></p>
+
+![](docs/images/github-banner.png)
 
 
 ## What is this good for?
 
-<img align="right" href="http://ec2-3-90-67-33.compute-1.amazonaws.com:8600" src="docs/images/dashboard.png" alt="" height="300"/>
+<img align="right" href="http://ec2-3-90-67-33.compute-1.amazonaws.com:8600" src="docs/images/dashboard.png" alt="" height="320"/>
 
 Websites and apps can significantly help people in the Corona crisis – by tracing contacts, checking symptoms, or providing targeted information. However, actual help in case of an infection or other problems is often local: Cities have their own hotlines; test sites and health departments are distributed across the country; and restrictions vary from region to region. We want to bridge this gap between digital tools and local help by providing an API with local information (hotlines, websites, test sites, health departments, restrictions). Developers can integrate this information into their tools in order to show the user specific help offers based on his location. 
 
