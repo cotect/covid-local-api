@@ -40,7 +40,7 @@ tl = Timeloop()
 
 @tl.job(interval=timedelta(seconds=86400))  # once per day
 def update_database():
-    db._update_database()
+    db.update_database()
 
 
 tl.start()
