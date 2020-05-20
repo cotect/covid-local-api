@@ -1,39 +1,33 @@
 import pandas as pd
 import sqlite3
 import math
-import threading
 
 
 class DatabaseHandler:
-    def __init__(self, update_every_seconds=None):
-        """Initializes the database connection. Downloads the Google Sheet, stores 
-        its data as in-memory sqlite3 database and updates it regularly.
-
-        Args:
-            update_every_seconds(int, optional): If not None, the database will be 
-                updated with the current data from the Google Sheet at this time 
-                interval in seconds. Defaults to None.
-        """
-        self.update_every_seconds = update_every_seconds
+    def __init__(self):
+        """Initializes the database with the data from the Google Sheet"""
         self.con = None
-        self._update_database()
-
-    def _update_database(self):
-        """Creates new database with the current data from the Google Sheet. 
+        self.update_database()
         
-        If self.update_every_seconds is not None, this will automatically schedule 
-        the next update.
-        """
-        # Close old database. This will delete it as it is only stored in memory.
+    def delete_database(self):
+        """Closes the database connection, which deletes the database"""
         # See https://stackoverflow.com/questions/48732439/deleting-a-database-file-in-memory
         if self.con is not None:
             print("Deleting old database...")
             self.con.close()
 
-        print("Creating new database...")
+    def update_database(self):
+        """Updates the database with the current data from the Google Sheet. 
+        
+        Downloads the data as an excel file and writes it to an in-memory sqlite 
+        database.
+        """
+        self.delete_database()
+
         # Create in-memory sqlite3 database.
         # We can use check_same_thread because we only read from the database, so
         # there's no concurrency
+        print("Creating new database...")
         self.con = sqlite3.connect(":memory:", check_same_thread=False)
 
         # Download excel file from Google Sheets, read it with pandas and write to
@@ -52,15 +46,7 @@ class DatabaseHandler:
             return d
 
         self.con.row_factory = dict_factory
-
         print("Database successfully updated")
-
-        # Schedule next update of the database.
-        if self.update_every_seconds is not None:
-            print(
-                f"Scheduling next database update in {self.update_every_seconds} sec"
-            )
-            threading.Timer(self.update_every_seconds, self._update_database).start()
 
     def get(self, sheet, geonames_ids):
         """Returns all entries from `sheet`, which match one of the ids in 

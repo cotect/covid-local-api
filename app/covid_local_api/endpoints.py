@@ -4,6 +4,8 @@ from starlette.responses import RedirectResponse
 from fastapi import FastAPI, Query, HTTPException
 from typing import List
 from enum import Enum
+from timeloop import Timeloop
+from datetime import timedelta
 
 from covid_local_api.__version__ import __version__
 from covid_local_api.db_handler import DatabaseHandler
@@ -31,8 +33,20 @@ from covid_local_api.utils import endpoint_utils, place_request_utils
 #     return place_handler.resolve_hierarchies(place_id)
 
 
-# Initialize database and API
-db = DatabaseHandler(update_every_seconds=86400)  # update data once per day
+# Initialize database and schedule daily update
+db = DatabaseHandler()
+tl = Timeloop()
+
+
+@tl.job(interval=timedelta(seconds=86400))  # once per day
+def update_database():
+    db._update_database()
+
+
+tl.start()
+
+
+# Initialize API
 app = FastAPI(
     title="COVID-19 Local API",
     description="API to get local help information about COVID-19 (hotlines, websites, "
