@@ -5,14 +5,14 @@ import threading
 
 
 class DatabaseHandler:
-    def __init__(self, update_every_seconds=3600):
+    def __init__(self, update_every_seconds=None):
         """Initializes the database connection. Downloads the Google Sheet, stores 
         its data as in-memory sqlite3 database and updates it regularly.
 
         Args:
             update_every_seconds(int, optional): If not None, the database will be 
                 updated with the current data from the Google Sheet at this time 
-                interval in seconds. Defaults to 3600 (equals 1 hour).
+                interval in seconds. Defaults to None.
         """
         self.update_every_seconds = update_every_seconds
         self.con = None
@@ -58,7 +58,7 @@ class DatabaseHandler:
         # Schedule next update of the database.
         if self.update_every_seconds is not None:
             print(
-                f"Scheduling next database update in {self.update_every_seconds} seconds"
+                f"Scheduling next database update in {self.update_every_seconds} sec"
             )
             threading.Timer(self.update_every_seconds, self._update_database).start()
 
