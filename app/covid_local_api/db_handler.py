@@ -1,6 +1,7 @@
 import pandas as pd
 import sqlite3
 import math
+import logging
 
 
 class DatabaseHandler:
@@ -8,12 +9,12 @@ class DatabaseHandler:
         """Initializes the database with the data from the Google Sheet"""
         self.con = None
         self.update_database()
-        
+
     def delete_database(self):
         """Closes the database connection, which deletes the database"""
         # See https://stackoverflow.com/questions/48732439/deleting-a-database-file-in-memory
         if self.con is not None:
-            print("Deleting old database...")
+            logging.info("Deleting old database...")
             self.con.close()
 
     def update_database(self):
@@ -27,7 +28,7 @@ class DatabaseHandler:
         # Create in-memory sqlite3 database.
         # We can use check_same_thread because we only read from the database, so
         # there's no concurrency
-        print("Creating new database...")
+        logging.info("Creating new database...")
         self.con = sqlite3.connect(":memory:", check_same_thread=False)
 
         # Download excel file from Google Sheets, read it with pandas and write to
@@ -46,7 +47,7 @@ class DatabaseHandler:
             return d
 
         self.con.row_factory = dict_factory
-        print("Database successfully updated")
+        logging.info("Database successfully updated")
 
     def get(self, sheet, geonames_ids):
         """Returns all entries from `sheet`, which match one of the ids in 
