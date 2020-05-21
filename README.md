@@ -50,6 +50,13 @@ For more details on endpoints, query parameters, and output formats, please have
 look at the [Swagger docs](http://ec2-3-90-67-33.compute-1.amazonaws.com/docs).
 
 
+## Client libraries
+
+Want to use the API directly in Python, JavaScript, etc? Our API is based on the OpenAPI 
+standard, so we can create client libraries quickly. Please get in touch and tell us 
+which language you need (johannes.rieke@gmail.com)! We will soon publish some examples.
+
+
 ## Running the API locally
 
 To run the API locally, clone this repo and run the following command:
