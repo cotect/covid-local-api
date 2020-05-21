@@ -1,6 +1,6 @@
 ![](docs/images/github-banner.png)
 
-<p align="center"><strong>REST API for location-based information on COVID-19<br>(hotlines, websites, test sites, health departments)</strong></p>
+<p align="center"><b>REST API for location-based information on COVID-19<br>(hotlines, websites, test sites, health departments)</b></p>
 
 <p align="center">
     <b>
@@ -9,6 +9,12 @@
       <a href="mailto:johannes.rieke@gmail.com">Contact</a>
     </b>
 </p>
+
+<!--
+<p align="center">
+    <img href="https://github.com/swagger-api/validator-badge" src="https://validator.swagger.io/validator/?url=http%3A%2F%2Fec2-3-90-67-33.compute-1.amazonaws.com%2Fopenapi.json">
+</p>
+-->
 
 
 ## What is this good for?
