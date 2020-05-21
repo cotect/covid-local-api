@@ -24,11 +24,15 @@ For example, to get all local information for Berlin Mitte, go to:
 The data is returned as JSON. Note that information for hierachically higher areas 
 (e.g. country-wide hotlines) are automatically returned as well. 
 
+### Endpoints
+
 Above, we used the `/all` endpoint to request all information from the database. You can 
 also use the more specific endpoints `/hotlines`, `/websites`, `/test_sites` and 
 `/health_departments`, which will only a return a subset of the data, e.g.:
 
     http://ec2-3-90-67-33.compute-1.amazonaws.com/hotlines?place_name=Berlin&20Mitte
+
+### Place search
 
 To specify the location of the query, we support two options: You can either use the 
 `place_name` parameter like above (with a city, neighborhood, state, ...). Under the 
@@ -45,6 +49,8 @@ formatting. If you found the correct place among these results, you can extract 
 `geonames_id` and pass it to the other endpoints like this:
 
     http://ec2-3-90-67-33.compute-1.amazonaws.com/all?geonames_id=2950159
+
+### Docs
 
 For more details on endpoints, query parameters, and output formats, please have a 
 look at the [Swagger docs](http://ec2-3-90-67-33.compute-1.amazonaws.com/docs).
