@@ -2,6 +2,14 @@
 
 <p align="center"><strong>REST API for location-based information on COVID-19<br>(hotlines, websites, test sites, health departments)</strong></p>
 
+<p align="center">
+    <b>
+      <a href="http://ec2-3-90-67-33.compute-1.amazonaws.com:8600/">Search dashboard</a> &nbsp; • &nbsp;
+      <a href="http://ec2-3-90-67-33.compute-1.amazonaws.com/docs">Swagger docs</a> &nbsp; • &nbsp;
+      <a href="mailto:johannes.rieke@gmail.com">Contact</a>
+    </b>
+</p>
+
 
 ## What is this good for?
 
