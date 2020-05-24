@@ -21,7 +21,11 @@
 
 <img align="right" href="http://ec2-3-90-67-33.compute-1.amazonaws.com:8600" src="docs/images/dashboard.png" alt="" height="320"/>
 
-Websites and apps can significantly help people in the Corona crisis – by tracing contacts, checking symptoms, or providing targeted information. However, actual help in case of an infection or other problems is often local: Cities have their own hotlines; test sites and health departments are distributed across the country; and restrictions vary from region to region. We want to bridge this gap between digital tools and local help by providing an API with local information (hotlines, websites, test sites, health departments, restrictions). Developers can integrate this information into their tools in order to show the user specific help offers based on his location. 
+This API provides local information and addresses on COVID-19 (hotlines, websites, test sites, health departments). It can be easily integrated into existing websites and apps, providing the user with relevant information based on their location. E.g., a tracing app could use this API to refer the user to their nearest test site in case of an infection risk. Features:
+
+- **Local information** (hotlines, websites, test sites, health deparments) for major German cities (more coming soon)
+- **Integration in websites/apps** via REST API (Python & JS clients coming soon)
+- **Built-in location search** for cities, neighborhoods, states, countries, ...
 
 Check out our [search dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to get an idea of which data our API offers!
 
@@ -72,9 +76,8 @@ look at the [Swagger docs](http://ec2-3-90-67-33.compute-1.amazonaws.com/docs).
 
 ## Client libraries
 
-Want to use the API directly in Python, JavaScript, etc? Our API is based on the OpenAPI 
-standard, so we can create client libraries quickly. Please get in touch and tell us 
-which language you need (johannes.rieke@gmail.com)! We will soon publish some examples.
+Want to use the API directly in your code? We will soon publish client libraries for Python and Javascript. If you use another language, please get in touch (johannes.rieke@gmail.com). Our API is based on the OpenAPI 
+standard, so we can create client libraries quickly. 
 
 
 ## Running the API locally
@@ -85,7 +88,7 @@ To run the API locally, clone this repo and run the following command:
     uvicorn local_test:app --reload
 
 The API should now be accessible at 127.0.0.1:8000. You can also deploy the API with 
-docker, using the dockerfile in the repo. 
+docker, using the dockerfile in the repo (note that this will serve the API at port 80 instead of 8000). 
 
 To start the [search dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600), 
 run:
@@ -93,7 +96,7 @@ run:
     streamlit run search-dashboard.py
 
 This will start the dashboard on port 8501. Note that the dockerfile automatically 
-starts the dashboard along with the API (using the `prestart.sh` file). 
+starts the dashboard along with the API (using the `prestart.sh` file; docker deployment uses port 8600 instead of 8501). 
 
 
 ## Data
