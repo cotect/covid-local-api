@@ -122,3 +122,20 @@ data.
 Python 3.7 and all packages in requirements.txt
 
 
+## Generating client libraries
+
+Client libraries can be generated automatically with the [OpenAPI Generator](https://openapi-generator.tech). If you update an existing client, please make sure to copy its `README.md` file before, as it was probably adapted manually. 
+
+For Python, run:
+
+```shell
+openapi-generator generate -i http://ec2-3-90-67-33.compute-1.amazonaws.com/openapi.json -g python -o covid-local-py --additional-properties packageName=covid_local,projectName=covid-local-py,packageUrl=https://github.com/cotect/covid-local-py,packageVersion=0.1.0 --git-host github.com --git-user-id cotect --git-repo-id covid-local-py
+```
+
+For JavaScript, run:
+
+```shell
+openapi-generator generate -i http://ec2-3-90-67-33.compute-1.amazonaws.com/openapi.json -g javascript -o covid-local-js --additional-properties moduleName=CovidLocal,projectName=covid-local-js,projectVersion=0.1.0 --git-host github.com --git-user-id cotect --git-repo-id covid-local-js
+```
+
+Both commands will use the API definition from the live deployment and write the client to `covid-local-py` or `covid-local-js`. After creating the client, you need to manually replace all occurences (in all files) of `http://localhost` with `http://ec2-3-90-67-33.compute-1.amazonaws.com`. This way, the client will pull data from the live deployment of the API (instead of a local deployment).
