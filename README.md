@@ -27,14 +27,14 @@ This API provides local information and addresses on COVID-19 for a given locati
 - **Integration in websites/apps** via REST API (Python & JS clients coming soon)
 - **Built-in location search** for cities, neighborhoods, states, ...
 
-Check out our [search dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to get an idea of which data our API offers!
+Check out our [search dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to get an idea of which data the API offers!
 
 <p align="middle">
   <img src="docs/images/dashboard.jpeg" height="370" valign="middle" />
   <img src="docs/images/mobile-mockup.png" height="400" valign="middle" /> 
 </p>
 
-<p align="center"><sub>This is what the API could look like in practice</sub></p>
+<p align="center"><sub>Our API in practice – desktop and mobile</sub></p>
 
 
 ## Usage
