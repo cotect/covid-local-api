@@ -22,7 +22,7 @@
 This API provides local information and addresses on COVID-19 for a given location (e.g. local hotlines & websites, nearby test sites, relevant health departments). It can be easily integrated into existing websites and apps, giving the user relevant information for their location. E.g., a tracing app could use this API to refer the user to their nearest test site in case of an infection risk. Features:
 
 - **Local information** (hotlines, websites, test sites, health departments) for major German cities (more coming soon)
-- **Integration in websites/apps** via REST API (Python & JS clients coming soon)
+- **Integration in websites & apps** via REST API and Python/JavaScript clients
 - **Built-in location search** for cities, neighborhoods, states, ...
 
 Check out our [search dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to get an idea of which data the API offers!
@@ -33,6 +33,11 @@ Check out our [search dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8
 </p>
 
 <p align="center"><sub>Our API in practice – web and mobile</sub></p>
+
+
+## Client libraries
+
+We have client libraries for Python ([covid-local-py](https://github.com/cotect/covid-local-py)) and JavaScript ([covid-local-js](https://github.com/cotect/covid-local-js)), so you can access the API directly from your code. Both repos show some examples in the README. Please make sure to still read the usage guide below to get an idea of how the API works in general. (Need a client for another language? Reach out to johannes.rieke@gmail.com)
 
 
 ## Usage
@@ -77,12 +82,6 @@ formatting. If you found the correct place among these results, you can extract 
 
 For more details on endpoints, query parameters, and output formats, please have a 
 look at the [Swagger docs](http://ec2-3-90-67-33.compute-1.amazonaws.com/docs).
-
-
-## Client libraries
-
-Want to use the API directly in your code? We will soon publish client libraries for Python and Javascript. If you use another language, please get in touch (johannes.rieke@gmail.com). Our API is based on the OpenAPI 
-standard, so we can create client libraries quickly. 
 
 
 ## Running the API locally
