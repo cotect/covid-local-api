@@ -1,6 +1,6 @@
 ![](docs/images/github-banner.png)
 
-<p align="center"><b>REST API for location-based information on COVID-19<br>(hotlines, websites, test sites, health departments)</b></p>
+<p align="center"><b>API for local information and addresses on COVID-19<br>(hotlines, websites, test sites, health departments)</b></p>
 
 <p align="center">
     <b>
@@ -19,15 +19,22 @@
 
 ## What is this good for?
 
-<img align="right" href="http://ec2-3-90-67-33.compute-1.amazonaws.com:8600" src="docs/images/dashboard.png" alt="" height="320"/>
+<!--<img align="right" href="http://ec2-3-90-67-33.compute-1.amazonaws.com:8600" src="docs/images/dashboard.png" alt="" height="320"/>-->
 
-This API provides local information and addresses on COVID-19 (hotlines, websites, test sites, health departments). It can be easily integrated into existing websites and apps, providing the user with relevant information based on their location. E.g., a tracing app could use this API to refer the user to their nearest test site in case of an infection risk. Features:
+This API provides local information and addresses on COVID-19 for a given location (e.g. local hotlines & websites, nearby test sites, relevant health departments). It can be easily integrated into existing websites and apps, giving the user relevant information for their location. E.g., a tracing app could use this API to refer the user to their nearest test site in case of an infection risk. Features:
 
-- **Local information** (hotlines, websites, test sites, health deparments) for major German cities (more coming soon)
+- **Local information** (hotlines, websites, test sites, health departments) for major German cities (more coming soon)
 - **Integration in websites/apps** via REST API (Python & JS clients coming soon)
-- **Built-in location search** for cities, neighborhoods, states, countries, ...
+- **Built-in location search** for cities, neighborhoods, states, ...
 
 Check out our [search dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to get an idea of which data our API offers!
+
+This is what using the API could look like on desktop and mobile:
+
+<p align="middle">
+  <img src="docs/images/dashboard.jpeg" height="300"/>
+  <img src="docs/images/mobile-mockup.png" height="300"/> 
+</p>
 
 
 ## Usage
