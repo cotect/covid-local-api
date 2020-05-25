@@ -1,6 +1,6 @@
 ![](docs/images/github-banner.png)
 
-<p align="center"><b>API for local information and addresses on COVID-19<br>(hotlines, websites, test sites, health departments)</b></p>
+<p align="center"><b>API for local information on COVID-19<br>(hotlines, websites, test sites, health departments)</b></p>
 
 <p align="center">
     <b>
