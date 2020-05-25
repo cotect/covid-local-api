@@ -42,8 +42,8 @@ We now have client libraries for Python ([covid-local-py](https://github.com/cot
 
 ## Usage
 
-You can try out the API using our live deployment at: 
-http://ec2-3-90-67-33.compute-1.amazonaws.com
+You can try out the API using our live deployment at 
+http://<span></span>ec2-3-90-67-33.compute-1.amazonaws.com (note that the main page does not return information!).
 
 For example, to get all local information for Berlin Mitte, go to:
 
