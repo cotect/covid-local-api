@@ -34,7 +34,7 @@ Check out our [search dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8
   <img src="docs/images/mobile-mockup.png" height="400" valign="middle" /> 
 </p>
 
-<p align="center"><sub>Our API in practice – desktop and mobile</sub></p>
+<p align="center"><sub>Our API in practice – web and mobile</sub></p>
 
 
 ## Usage
