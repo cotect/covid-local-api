@@ -19,8 +19,6 @@
 
 ## What is this good for?
 
-<!--<img align="right" href="http://ec2-3-90-67-33.compute-1.amazonaws.com:8600" src="docs/images/dashboard.png" alt="" height="320"/>-->
-
 This API provides local information and addresses on COVID-19 for a given location (e.g. local hotlines & websites, nearby test sites, relevant health departments). It can be easily integrated into existing websites and apps, giving the user relevant information for their location. E.g., a tracing app could use this API to refer the user to their nearest test site in case of an infection risk. Features:
 
 - **Local information** (hotlines, websites, test sites, health departments) for major German cities (more coming soon)
