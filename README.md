@@ -37,7 +37,7 @@ Check out our [search dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8
 
 ## Client libraries
 
-We now have client libraries for Python ([covid-local-py](https://github.com/cotect/covid-local-py)) and JavaScript ([covid-local-js](https://github.com/cotect/covid-local-js)), so you can access the API directly from your code. Both repos show some examples in the README. Please make sure to still read the usage guide below to get an idea of how the API works in general. (Need a client for another language? Reach out to johannes.rieke@gmail.com)
+We now have client libraries for Python ([covid-local-py](https://github.com/cotect/covid-local-py)) and JavaScript ([covid-local-js](https://github.com/cotect/covid-local-js)), so you can access the API directly from your code. Both repos show some examples in the README. Please make sure to still read the usage guide below to get an idea of how the API works in general. (Need a client for another language? [Generate it yourself](#generating-client-libraries) or reach out to johannes.rieke@gmail.com)
 
 
 ## Usage
