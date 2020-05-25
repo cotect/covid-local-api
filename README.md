@@ -29,12 +29,12 @@ This API provides local information and addresses on COVID-19 for a given locati
 
 Check out our [search dashboard](http://ec2-3-90-67-33.compute-1.amazonaws.com:8600) to get an idea of which data our API offers!
 
-This is what using the API could look like on desktop and mobile:
-
 <p align="middle">
-  <img src="docs/images/dashboard.jpeg" height="370" style="vertical-align:middle;" />
-  <img src="docs/images/mobile-mockup.png" height="400" style="vertical-align:middle;"/> 
+  <img src="docs/images/dashboard.jpeg" height="370" valign="middle" />
+  <img src="docs/images/mobile-mockup.png" height="400" valign="middle" /> 
 </p>
+
+<p align="center"><sub>This is what the API could look like in practice</sub></p>
 
 
 ## Usage
